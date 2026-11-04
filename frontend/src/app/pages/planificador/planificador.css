@@ -1,0 +1,32 @@
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+label {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.tablero {
+  max-width: 100%;
+  height: auto;
+}
