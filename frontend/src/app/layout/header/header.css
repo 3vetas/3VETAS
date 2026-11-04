@@ -1,21 +1,21 @@
-.header {
+.cabecera {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #ddd;
 }
 
-.logo {
+.cabecera__logo {
+  margin-right: auto;
   font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
   color: inherit;
 }
 
-nav ul {
+.menu {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -24,12 +24,12 @@ nav ul {
   list-style: none;
 }
 
-nav a {
+.menu__enlace {
   text-decoration: none;
   color: inherit;
 }
 
-nav a.activo {
+.menu__enlace--activo {
   font-weight: bold;
   text-decoration: underline;
 }

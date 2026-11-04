@@ -1,12 +1,13 @@
-<header class="header">
-  <a class="logo" routerLink="/">3Vetas</a>
-  <nav>
-    <ul>
+<header class="cabecera">
+  <a class="cabecera__logo" routerLink="/">3Vetas</a>
+  <nav class="cabecera__nav" aria-label="Principal">
+    <ul class="menu">
       @for (enlace of enlaces; track enlace.ruta) {
-        <li>
+        <li class="menu__item">
           <a
+            class="menu__enlace"
             [routerLink]="enlace.ruta"
-            routerLinkActive="activo"
+            routerLinkActive="menu__enlace--activo"
             [routerLinkActiveOptions]="{ exact: enlace.ruta === '/' }"
           >
             {{ enlace.texto }}
@@ -15,4 +16,5 @@
       }
     </ul>
   </nav>
+  <a class="boton boton--secundario cabecera__acceso" routerLink="/login">Entrar</a>
 </header>

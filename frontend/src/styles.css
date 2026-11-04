@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+/*
+ * Estilos globales.
+ *
+ * Las clases siguen BEM en castellano: bloque__elemento--modificador.
+ * Cada página tiene sus propios bloques en su .css. Estos son los comunes,
+ * que se usan en varias páginas y conviene definir aquí:
+ *
+ * - seccion, seccion__titulo, seccion__vacio: caja con título de cada parte de una página.
+ * - boton, boton--primario, boton--secundario, boton--bloque (ocupa todo el ancho).
+ * - acciones, acciones--derecha, acciones--centro: fila de botones.
+ * - formulario, formulario__grupo, formulario__leyenda.
+ * - campo, campo__etiqueta, campo__control, campo__error, campo--casilla (checkbox).
+ * - tabla, tabla__accion (columna de botones).
+ * - datos, datos__fila, datos__nombre, datos__valor: lista de nombre y valor (dl).
+ * - aviso, aviso--error.
+ * - tarjeta, tarjeta__titulo, tarjeta__texto.
+ * - estado, estado--pendiente, estado--aceptado, estado--en_produccion, estado--finalizado,
+ *   estado--entregado, estado--cancelado, estado--rechazado: etiqueta del estado de un pedido.
+ */

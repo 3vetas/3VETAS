@@ -1,10 +1,13 @@
-.footer {
+.pie {
   padding: 1.5rem;
   border-top: 1px solid #ddd;
   text-align: center;
   font-size: 0.9rem;
 }
 
-.footer p {
+.pie__marca,
+.pie__contacto,
+.pie__horario {
   margin: 0.25rem 0;
+  font-style: normal;
 }

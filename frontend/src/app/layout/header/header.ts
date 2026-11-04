@@ -14,6 +14,5 @@ export class Header {
     { ruta: '/planificador', texto: 'Planificador' },
     { ruta: '/carrito', texto: 'Carrito' },
     { ruta: '/pedidos', texto: 'Mis pedidos' },
-    { ruta: '/login', texto: 'Acceso' },
   ];
 }
