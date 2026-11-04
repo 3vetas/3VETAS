@@ -1,1 +1,304 @@
-<p>Aquí el cliente elige el tablero y mete el ancho, alto y cantidad de sus piezas. Se dibuja cómo quedan los cortes en el tablero, avisa si alguna pieza no cabe y calcula cuántos tableros hacen falta, el desperdicio y el precio aproximado.</p>
+<h1>Planificador de cortes</h1>
+<p>
+  Añade las piezas que necesitas. Cada material tiene su propia tabla, con los formatos de tablero
+  en los que se pueden cortar y lo que cuesta cada uno.
+</p>
+<p><button type="button" (click)="abrirModal()">+ Añadir pieza</button></p>
+
+@for (bloque of bloques(); track $index; let i = $index) {
+  @let material = bloque.material;
+  <section>
+    <h2>
+      {{ material.tipoTablero.nombre }} · {{ material.acabado.nombre }} ·
+      {{ material.grosor.valorMm }} mm
+    </h2>
+    <div class="columnas">
+      <div>
+        <h3>Piezas</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza</th>
+              <th>Medidas (mm)</th>
+              <th>Cant.</th>
+              <th>Girar</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pieza of material.piezas; track $index) {
+              <tr>
+                <td>{{ pieza.descripcion }}</td>
+                <td>{{ pieza.anchoMm }} × {{ pieza.altoMm }}</td>
+                <td>{{ pieza.cantidad }}</td>
+                <td>{{ pieza.rotacionPermitida ? 'Sí' : 'No' }}</td>
+                <td>
+                  <button
+                    type="button"
+                    [attr.aria-label]="'Quitar ' + pieza.descripcion"
+                    (click)="quitarPieza(i, $index)"
+                  >
+                    ✕
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <h3>Opciones de tablero</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Formato (mm)</th>
+              <th>Tableros</th>
+              <th>Aprovechamiento</th>
+              <th>Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (opcion of bloque.optimizaciones; track opcion.nombreOpcion) {
+              <tr>
+                <td>
+                  <label>
+                    <input
+                      type="radio"
+                      [name]="'opcion-' + i"
+                      [checked]="opcion.seleccionada"
+                      (change)="elegirOpcion(i, opcion)"
+                    />
+                    {{ opcion.nombreOpcion }}
+                  </label>
+                  @if ($first) {
+                    <strong>Recomendada</strong>
+                  }
+                </td>
+                <td>{{ contarTableros(opcion) }}</td>
+                <td>{{ porcentaje.format(opcion.porcentajeAprovechamiento / 100) }}</td>
+                <td>{{ euros.format(opcion.costeEstimado) }}</td>
+              </tr>
+            }
+            @for (descartado of bloque.descartados; track descartado.tablero.id) {
+              <tr>
+                <td>
+                  <label>
+                    <input type="radio" [name]="'opcion-' + i" disabled />
+                    {{ descartado.tablero.formato.anchoMm }} ×
+                    {{ descartado.tablero.formato.altoMm }}
+                  </label>
+                </td>
+                <td colspan="3">{{ descartado.motivo }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <h3>Distribución</h3>
+        @if (bloque.elegida; as opcion) {
+          @for (detalle of opcion.detalles; track detalle.tablero.id) {
+            @let formato = detalle.tablero.formato;
+            @for (unidad of detalle.unidades; track unidad.numeroTablero) {
+              <figure>
+                <svg
+                  class="tablero"
+                  width="720"
+                  role="img"
+                  [attr.viewBox]="'0 0 ' + formato.anchoMm + ' ' + formato.altoMm"
+                  [attr.aria-label]="
+                    'Tablero ' +
+                    unidad.numeroTablero +
+                    ' con ' +
+                    unidad.distribucion.length +
+                    ' piezas'
+                  "
+                >
+                  <rect
+                    [attr.width]="formato.anchoMm"
+                    [attr.height]="formato.altoMm"
+                    fill="#d0d0d0"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    vector-effect="non-scaling-stroke"
+                  />
+                  @for (colocada of unidad.distribucion; track colocada.ordenDibujo) {
+                    @let pieza = material.piezas[colocada.indicePieza];
+                    <rect
+                      [attr.x]="colocada.posicionXMm"
+                      [attr.y]="colocada.posicionYMm"
+                      [attr.width]="colocada.anchoFinalMm"
+                      [attr.height]="colocada.altoFinalMm"
+                      [attr.fill]="material.acabado.colorBase"
+                      stroke="currentColor"
+                      stroke-width="1"
+                      vector-effect="non-scaling-stroke"
+                    >
+                      <title>
+                        {{ pieza.descripcion }} · {{ pieza.anchoMm }} × {{ pieza.altoMm }} mm
+                        {{ colocada.rotada ? '(girada)' : '' }}
+                      </title>
+                    </rect>
+                    <!-- Este svg recorta el texto para que no se salga de la pieza. -->
+                    <svg
+                      [attr.x]="colocada.posicionXMm"
+                      [attr.y]="colocada.posicionYMm"
+                      [attr.width]="colocada.anchoFinalMm"
+                      [attr.height]="colocada.altoFinalMm"
+                    >
+                      <text
+                        x="50%"
+                        y="50%"
+                        text-anchor="middle"
+                        [attr.font-size]="tamanoLetra(colocada, pieza)"
+                      >
+                        <tspan x="50%" dy="-0.2em">{{ pieza.descripcion }}</tspan>
+                        <tspan x="50%" dy="1.2em">
+                          {{ pieza.anchoMm }} × {{ pieza.altoMm }}{{ colocada.rotada ? ' ↻' : '' }}
+                        </tspan>
+                      </text>
+                    </svg>
+                  }
+                </svg>
+                <figcaption>
+                  Tablero {{ unidad.numeroTablero }} de {{ contarTableros(opcion) }} ·
+                  {{ formato.anchoMm }} × {{ formato.altoMm }} mm
+                </figcaption>
+              </figure>
+            }
+          }
+          <p>
+            <small>
+              Gris: sobrante. ↻: pieza girada 90°. Entre corte y corte se pierden
+              {{ grosorSierraMm }} mm de sierra.
+            </small>
+          </p>
+        } @else {
+          <p>Ninguno de los formatos sirve para estas piezas.</p>
+        }
+      </div>
+    </div>
+  </section>
+} @empty {
+  <p>Todavía no has añadido piezas.</p>
+}
+
+<section>
+  <h2>Resumen del proyecto</h2>
+  @let total = totales();
+  <dl>
+    <dt>Materiales</dt>
+    <dd>{{ materiales().length }}</dd>
+    <dt>Piezas totales</dt>
+    <dd>{{ totalPiezas() }}</dd>
+    <dt>Tableros necesarios</dt>
+    <dd>{{ total ? total.tableros : '—' }}</dd>
+    <dt>Superficie aprovechada</dt>
+    <dd>{{ total ? porcentaje.format(total.aprovechamiento) : '—' }}</dd>
+    <dt>Desperdicio</dt>
+    <dd>{{ total ? decimales.format(total.desperdicioM2) + ' m²' : '—' }}</dd>
+    <dt>Precio estimado</dt>
+    <dd>{{ total ? euros.format(total.precio) : '—' }}</dd>
+  </dl>
+  @if (materiales().length > 0 && !total) {
+    <p>Hay materiales en los que no sirve ningún formato. Revisa sus piezas.</p>
+  }
+  <p><small>El precio es aproximado y no es un pedido confirmado.</small></p>
+  <p>
+    <button type="button" [disabled]="materiales().length === 0" (click)="materiales.set([])">
+      Limpiar
+    </button>
+    <button type="button" disabled title="El carrito todavía no está disponible">
+      Añadir al carrito
+    </button>
+  </p>
+</section>
+
+<dialog #modal aria-labelledby="titulo-modal">
+  <form [formRoot]="piezaForm">
+    <h2 id="titulo-modal">Añadir pieza</h2>
+    <fieldset>
+      <legend>Material</legend>
+      <p>
+        <label for="tipo">Tipo de tablero</label>
+        <select id="tipo" #tipoSelect (change)="tipoId.set(+tipoSelect.value)">
+          @for (tipo of tipos(); track tipo.id) {
+            <option [value]="tipo.id" [selected]="tipo.id === tipoId()">{{ tipo.nombre }}</option>
+          }
+        </select>
+      </p>
+      <p>
+        <label for="acabado">Acabado</label>
+        <select id="acabado" #acabadoSelect (change)="acabadoId.set(+acabadoSelect.value)">
+          @for (acabado of acabados(); track acabado.id) {
+            <option [value]="acabado.id" [selected]="acabado.id === acabadoId()">
+              {{ acabado.nombre }}
+            </option>
+          }
+        </select>
+      </p>
+      <p>
+        <label for="grosor">Grosor</label>
+        <select id="grosor" #grosorSelect (change)="grosorId.set(+grosorSelect.value)">
+          @for (grosor of grosores(); track grosor.id) {
+            <option [value]="grosor.id" [selected]="grosor.id === grosorId()">
+              {{ grosor.valorMm }} mm
+            </option>
+          }
+        </select>
+      </p>
+    </fieldset>
+    <fieldset>
+      <legend>Pieza</legend>
+      <p>
+        <label for="descripcion">Descripción</label>
+        <input
+          id="descripcion"
+          placeholder="Ej.: costado izquierdo"
+          [formField]="piezaForm.descripcion"
+        />
+        @if (piezaForm.descripcion().touched() && piezaForm.descripcion().invalid()) {
+          <small>{{ piezaForm.descripcion().errors()[0].message }}</small>
+        }
+      </p>
+      <p>
+        <label for="ancho">Ancho (mm)</label>
+        <input id="ancho" type="number" [formField]="piezaForm.anchoMm" />
+        @if (piezaForm.anchoMm().touched() && piezaForm.anchoMm().invalid()) {
+          <small>{{ piezaForm.anchoMm().errors()[0].message }}</small>
+        }
+      </p>
+      <p>
+        <label for="alto">Alto (mm)</label>
+        <input id="alto" type="number" [formField]="piezaForm.altoMm" />
+        @if (piezaForm.altoMm().touched() && piezaForm.altoMm().invalid()) {
+          <small>{{ piezaForm.altoMm().errors()[0].message }}</small>
+        }
+      </p>
+      <p>
+        <label for="cantidad">Cantidad</label>
+        <input id="cantidad" type="number" [formField]="piezaForm.cantidad" />
+        @if (piezaForm.cantidad().touched() && piezaForm.cantidad().invalid()) {
+          <small>{{ piezaForm.cantidad().errors()[0].message }}</small>
+        }
+      </p>
+      <p>
+        <label>
+          <input type="checkbox" [formField]="piezaForm.rotacionPermitida" />
+          Se puede girar 90° (la veta no importa)
+        </label>
+      </p>
+    </fieldset>
+    @if (piezaForm().touched() && piezaForm().invalid()) {
+      @for (error of piezaForm().errors(); track error.kind) {
+        <p>
+          <small>{{ error.message }}</small>
+        </p>
+      }
+    }
+    <p>
+      <button type="button" (click)="modal.close()">Cancelar</button>
+      <button type="submit">Añadir</button>
+    </p>
+  </form>
+</dialog>
