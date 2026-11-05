@@ -3,16 +3,19 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem 1.5rem;
+  background-color: var(--color-gris);
   border-bottom: 1px solid #ddd;
+  color: var(--color-texto-contraste);
 }
 
 .cabecera__logo {
   margin-right: auto;
-  font-size: 1.5rem;
+  font-family: var(--fuente-principal);
+  font-size: 1.8rem;
   font-weight: bold;
   text-decoration: none;
-  color: inherit;
+
 }
 
 .menu {
@@ -22,14 +25,21 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  font-family: var(--fuente-tecnica);
 }
 
 .menu__enlace {
+  color: var(--color-texto-contraste);
   text-decoration: none;
-  color: inherit;
+
+  padding-bottom: 0.1rem;
+  border-bottom: 3px solid transparent;
+}
+
+.menu__enlace:hover {
+  border-bottom-color: var(--color-oliva);
 }
 
 .menu__enlace--activo {
-  font-weight: bold;
-  text-decoration: underline;
+  border-bottom-color: var(--color-oliva);
 }
