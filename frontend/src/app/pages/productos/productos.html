@@ -1,1 +1,116 @@
-<p>Aquí se ven todos los tableros con su foto, tipo de madera, medidas, grosor, acabado, precio y si hay stock. Se pueden filtrar por madera, grosor y disponibilidad.</p>
+<h1>Catálogo de tableros</h1>
+
+<section class="seccion filtros">
+  <h2 class="seccion__titulo">Filtros</h2>
+  <form class="filtros__formulario" (submit)="$event.preventDefault()">
+    <div class="campo">
+      <label class="campo__etiqueta" for="filtro-tipo">Madera</label>
+      <select
+        class="campo__control"
+        id="filtro-tipo"
+        #tipoSelect
+        (change)="tipoId.set(+tipoSelect.value)"
+      >
+        <option value="0" [selected]="tipoId() === 0">Todas</option>
+        @for (tipo of tipos(); track tipo.id) {
+          <option [value]="tipo.id" [selected]="tipo.id === tipoId()">{{ tipo.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="campo">
+      <label class="campo__etiqueta" for="filtro-grosor">Grosor</label>
+      <select
+        class="campo__control"
+        id="filtro-grosor"
+        #grosorSelect
+        (change)="grosorId.set(+grosorSelect.value)"
+      >
+        <option value="0" [selected]="grosorId() === 0">Todos</option>
+        @for (grosor of grosores(); track grosor.id) {
+          <option [value]="grosor.id" [selected]="grosor.id === grosorId()">
+            {{ grosor.valorMm }} mm
+          </option>
+        }
+      </select>
+    </div>
+    <div class="campo">
+      <label class="campo__etiqueta" for="filtro-disponibilidad">Disponibilidad</label>
+      <select
+        class="campo__control"
+        id="filtro-disponibilidad"
+        #disponibilidadSelect
+        (change)="cambiarDisponibilidad(disponibilidadSelect.value)"
+      >
+        <option value="todos" [selected]="disponibilidad() === 'todos'">Todos</option>
+        <option value="en-stock" [selected]="disponibilidad() === 'en-stock'">En stock</option>
+        <option value="sin-stock" [selected]="disponibilidad() === 'sin-stock'">Sin stock</option>
+      </select>
+    </div>
+    <button class="boton boton--secundario" type="button" (click)="limpiar()">Limpiar</button>
+  </form>
+</section>
+
+<section class="seccion catalogo">
+  <h2 class="seccion__titulo">Tableros ({{ filtrados().length }})</h2>
+  <ul class="catalogo__lista">
+    @for (tablero of visibles(); track tablero.id) {
+      <li class="catalogo__item">
+        <article class="tarjeta-tablero">
+          <!-- Hasta que haya fotos, la imagen muestra el color del acabado. -->
+          <div
+            class="tarjeta-tablero__imagen"
+            [style.background-color]="tablero.acabado.colorBase"
+          ></div>
+          <h3 class="tarjeta-tablero__nombre">{{ tablero.descripcion }}</h3>
+          <p class="tarjeta-tablero__medidas">
+            {{ tablero.formato.anchoMm }} × {{ tablero.formato.altoMm }} mm ·
+            {{ tablero.grosor.valorMm }} mm · {{ tablero.acabado.nombre }}
+          </p>
+          <p class="tarjeta-tablero__precio">{{ euros.format(tablero.precioTablero) }}</p>
+          @if (tablero.stockActual > 0) {
+            <p class="tarjeta-tablero__estado">En stock ({{ tablero.stockActual }})</p>
+          } @else {
+            <p class="tarjeta-tablero__estado tarjeta-tablero__estado--sin-stock">Sin stock</p>
+          }
+          <a class="boton boton--primario boton--bloque" routerLink="/planificador">
+            Usar en planificador
+          </a>
+        </article>
+      </li>
+    } @empty {
+      <li class="seccion__vacio">No hay tableros con estos filtros.</li>
+    }
+  </ul>
+
+  @if (paginas().length > 1) {
+    <nav class="paginacion" aria-label="Páginas del catálogo">
+      <button
+        class="boton paginacion__boton"
+        type="button"
+        [disabled]="pagina() === 1"
+        (click)="pagina.set(pagina() - 1)"
+      >
+        ◀ Anterior
+      </button>
+      @for (numero of paginas(); track numero) {
+        <button
+          class="boton paginacion__boton paginacion__numero"
+          type="button"
+          [class.paginacion__numero--actual]="numero === pagina()"
+          [attr.aria-current]="numero === pagina() ? 'page' : null"
+          (click)="pagina.set(numero)"
+        >
+          {{ numero }}
+        </button>
+      }
+      <button
+        class="boton paginacion__boton"
+        type="button"
+        [disabled]="pagina() === paginas().length"
+        (click)="pagina.set(pagina() + 1)"
+      >
+        Siguiente ▶
+      </button>
+    </nav>
+  }
+</section>
