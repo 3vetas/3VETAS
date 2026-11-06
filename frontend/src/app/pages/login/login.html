@@ -1,2 +1,35 @@
-<p>Aquí el usuario inicia sesión. Según su rol (cliente, producción o administración) podrá entrar a unas partes u otras.</p>
-<p>¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
+<section class="seccion acceso">
+  <h1 class="seccion__titulo">Iniciar sesión</h1>
+  <form class="formulario" [formRoot]="loginForm">
+    <div class="campo">
+      <label class="campo__etiqueta" for="login-correo">Correo electrónico</label>
+      <input
+        class="campo__control"
+        id="login-correo"
+        type="email"
+        autocomplete="email"
+        [formField]="loginForm.correo"
+      />
+      @if (loginForm.correo().touched() && loginForm.correo().invalid()) {
+        <small class="campo__error">{{ loginForm.correo().errors()[0].message }}</small>
+      }
+    </div>
+    <div class="campo">
+      <label class="campo__etiqueta" for="login-contrasena">Contraseña</label>
+      <input
+        class="campo__control"
+        id="login-contrasena"
+        type="password"
+        autocomplete="current-password"
+        [formField]="loginForm.contrasena"
+      />
+      @if (loginForm.contrasena().touched() && loginForm.contrasena().invalid()) {
+        <small class="campo__error">{{ loginForm.contrasena().errors()[0].message }}</small>
+      }
+    </div>
+    <button class="boton boton--primario boton--bloque" type="submit">Entrar</button>
+  </form>
+  <!-- Pendiente: recuperar la contraseña. -->
+  <p class="acceso__enlace"><a routerLink="/login">¿Olvidaste tu contraseña?</a></p>
+  <p class="acceso__enlace">¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
+</section>

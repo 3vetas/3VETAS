@@ -1,2 +1,58 @@
-<p>Aquí un cliente nuevo crea su cuenta. Los campos definitivos del registro se fijarán durante el análisis.</p>
-<p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+<section class="seccion acceso">
+  <h1 class="seccion__titulo">Crear cuenta</h1>
+  <form class="formulario" [formRoot]="registroForm">
+    <div class="campo">
+      <label class="campo__etiqueta" for="registro-nombre">Nombre</label>
+      <input
+        class="campo__control"
+        id="registro-nombre"
+        autocomplete="name"
+        [formField]="registroForm.nombre"
+      />
+      @if (registroForm.nombre().touched() && registroForm.nombre().invalid()) {
+        <small class="campo__error">{{ registroForm.nombre().errors()[0].message }}</small>
+      }
+    </div>
+    <div class="campo">
+      <label class="campo__etiqueta" for="registro-correo">Correo electrónico</label>
+      <input
+        class="campo__control"
+        id="registro-correo"
+        type="email"
+        autocomplete="email"
+        [formField]="registroForm.correo"
+      />
+      @if (registroForm.correo().touched() && registroForm.correo().invalid()) {
+        <small class="campo__error">{{ registroForm.correo().errors()[0].message }}</small>
+      }
+    </div>
+    <div class="campo">
+      <label class="campo__etiqueta" for="registro-contrasena">Contraseña</label>
+      <input
+        class="campo__control"
+        id="registro-contrasena"
+        type="password"
+        autocomplete="new-password"
+        [formField]="registroForm.contrasena"
+      />
+      @if (registroForm.contrasena().touched() && registroForm.contrasena().invalid()) {
+        <small class="campo__error">{{ registroForm.contrasena().errors()[0].message }}</small>
+      }
+    </div>
+    <div class="campo">
+      <label class="campo__etiqueta" for="registro-repetida">Repetir contraseña</label>
+      <input
+        class="campo__control"
+        id="registro-repetida"
+        type="password"
+        autocomplete="new-password"
+        [formField]="registroForm.repetida"
+      />
+      @if (registroForm.repetida().touched() && registroForm.repetida().invalid()) {
+        <small class="campo__error">{{ registroForm.repetida().errors()[0].message }}</small>
+      }
+    </div>
+    <button class="boton boton--primario boton--bloque" type="submit">Crear cuenta</button>
+  </form>
+  <p class="acceso__enlace">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+</section>
