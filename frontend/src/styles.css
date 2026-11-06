@@ -17,3 +17,49 @@
  * - estado, estado--pendiente, estado--aceptado, estado--en_produccion, estado--finalizado,
  *   estado--entregado, estado--cancelado, estado--rechazado: etiqueta del estado de un pedido.
  */
+
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap');
+
+
+
+:root {
+  /* tipografias */
+
+  --fuente-principal: 'Work Sans', sans-serif;
+  --fuente-tecnica: 'JetBrains Mono', monospace;
+
+/* colores corporativos */
+
+  --color-gris: #6E6E67;
+  --color-oliva: #8A964B;
+  --color-blanco: #FFFFFF;
+  --color-mostaza: #B57919;
+  --color-teja: #7A2E18;
+
+/* colores generales */
+
+  --color-texto: #29251F;
+  --color-texto-contraste:#FFFFFF;
+  --color-fondo: #FFFFFF;
+}
+
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+
+  font-family: var(--fuente-principal);
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+}
