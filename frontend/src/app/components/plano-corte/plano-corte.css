@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.plano-corte {
+  display: block;
+  width: 100%;
+  height: auto;
+}

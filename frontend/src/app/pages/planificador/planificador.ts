@@ -10,8 +10,9 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, required, SchemaPath, validate } from '@angular/forms/signals';
 
+import { PlanoCorte } from '../../components/plano-corte/plano-corte';
 import { Tablero } from '../../models/catalogo';
-import { DistribucionPieza, Optimizacion, Pieza, TableroProyecto } from '../../models/planificador';
+import { Optimizacion, Pieza, TableroProyecto } from '../../models/planificador';
 import { Catalogo } from '../../services/catalogo';
 import { cabe, GROSOR_SIERRA_MM } from './colocacion';
 import { calcularOpciones } from './opciones';
@@ -23,7 +24,7 @@ interface Material extends Omit<TableroProyecto, 'optimizaciones'> {
 }
 
 @Component({
-  imports: [FormField, FormRoot],
+  imports: [FormField, FormRoot, PlanoCorte],
   selector: 'app-planificador',
   styleUrl: './planificador.css',
   templateUrl: './planificador.html',
@@ -163,15 +164,6 @@ export class Planificador {
 
   protected contarTableros(opcion: Optimizacion): number {
     return sumar(opcion.detalles, (d) => d.cantidad);
-  }
-
-  // Letra en mm para que la descripción y las medidas quepan dentro de la pieza dibujada.
-  protected tamanoLetra(colocada: DistribucionPieza, pieza: Pieza): number {
-    const caracteres = Math.max(
-      pieza.descripcion.length,
-      `${pieza.anchoMm} × ${pieza.altoMm} ↻`.length,
-    );
-    return Math.min(70, colocada.altoFinalMm / 3, colocada.anchoFinalMm / (0.6 * caracteres));
   }
 
   // La pieza va a la tabla de su material. Si el proyecto aún no tiene ese material, se crea su tabla.

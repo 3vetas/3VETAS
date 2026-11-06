@@ -101,65 +101,12 @@
             @let formato = detalle.tablero.formato;
             @for (unidad of detalle.unidades; track unidad.numeroTablero) {
               <figure>
-                <svg
-                  class="tablero"
-                  width="720"
-                  role="img"
-                  [attr.viewBox]="'0 0 ' + formato.anchoMm + ' ' + formato.altoMm"
-                  [attr.aria-label]="
-                    'Tablero ' +
-                    unidad.numeroTablero +
-                    ' con ' +
-                    unidad.distribucion.length +
-                    ' piezas'
-                  "
-                >
-                  <rect
-                    [attr.width]="formato.anchoMm"
-                    [attr.height]="formato.altoMm"
-                    fill="#d0d0d0"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    vector-effect="non-scaling-stroke"
-                  />
-                  @for (colocada of unidad.distribucion; track colocada.ordenDibujo) {
-                    @let pieza = material.piezas[colocada.indicePieza];
-                    <rect
-                      [attr.x]="colocada.posicionXMm"
-                      [attr.y]="colocada.posicionYMm"
-                      [attr.width]="colocada.anchoFinalMm"
-                      [attr.height]="colocada.altoFinalMm"
-                      [attr.fill]="material.acabado.colorBase"
-                      stroke="currentColor"
-                      stroke-width="1"
-                      vector-effect="non-scaling-stroke"
-                    >
-                      <title>
-                        {{ pieza.descripcion }} · {{ pieza.anchoMm }} × {{ pieza.altoMm }} mm
-                        {{ colocada.rotada ? '(girada)' : '' }}
-                      </title>
-                    </rect>
-                    <!-- Este svg recorta el texto para que no se salga de la pieza. -->
-                    <svg
-                      [attr.x]="colocada.posicionXMm"
-                      [attr.y]="colocada.posicionYMm"
-                      [attr.width]="colocada.anchoFinalMm"
-                      [attr.height]="colocada.altoFinalMm"
-                    >
-                      <text
-                        x="50%"
-                        y="50%"
-                        text-anchor="middle"
-                        [attr.font-size]="tamanoLetra(colocada, pieza)"
-                      >
-                        <tspan x="50%" dy="-0.2em">{{ pieza.descripcion }}</tspan>
-                        <tspan x="50%" dy="1.2em">
-                          {{ pieza.anchoMm }} × {{ pieza.altoMm }}{{ colocada.rotada ? ' ↻' : '' }}
-                        </tspan>
-                      </text>
-                    </svg>
-                  }
-                </svg>
+                <app-plano-corte
+                  [formato]="formato"
+                  [unidad]="unidad"
+                  [piezas]="material.piezas"
+                  [color]="material.acabado.colorBase"
+                />
                 <figcaption>
                   Tablero {{ unidad.numeroTablero }} de {{ contarTableros(opcion) }} ·
                   {{ formato.anchoMm }} × {{ formato.altoMm }} mm
