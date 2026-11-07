@@ -1,1 +1,95 @@
-<p>Aquí están las configuraciones que ha añadido el cliente con el resumen del precio. Puede dejar un comentario para el taller y enviar la solicitud.</p>
+<h1>Carrito</h1>
+
+<section class="seccion carrito">
+  <h2 class="seccion__titulo">Configuraciones</h2>
+  @if (lineas().length > 0) {
+    <table class="tabla carrito__tabla">
+      <thead>
+        <tr>
+          <th scope="col">Proyecto</th>
+          <th scope="col">Material</th>
+          <th scope="col">Formato</th>
+          <th scope="col">Piezas</th>
+          <th scope="col">Tableros</th>
+          <th scope="col">Precio est.</th>
+          <th scope="col"><span class="oculto">Acciones</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (linea of lineas(); track $index) {
+          <tr>
+            <td>{{ linea.proyecto }}</td>
+            <td>{{ linea.material }}</td>
+            <td>{{ linea.formato }}</td>
+            <td>{{ linea.piezas }}</td>
+            <td>{{ linea.tableros }}</td>
+            <td>{{ euros.format(linea.precioEstimado) }}</td>
+            <td class="tabla__accion">
+              <a class="boton boton--secundario" routerLink="/planificador">Editar</a>
+              <button class="boton boton--secundario" type="button" (click)="quitar($index)">
+                Quitar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="seccion__vacio">El carrito está vacío.</p>
+  }
+</section>
+
+<div class="carrito__detalles">
+  <section class="seccion comentarios">
+    <h2 class="seccion__titulo">
+      <label for="comentario">Comentarios para el taller</label>
+    </h2>
+    <textarea
+      class="campo__control comentarios__texto"
+      id="comentario"
+      rows="6"
+      placeholder="Por ejemplo, si quieres recoger el pedido o cantear alguna pieza."
+      [value]="comentario()"
+      (input)="comentario.set($any($event.target).value)"
+    ></textarea>
+  </section>
+
+  <section class="seccion resumen">
+    <h2 class="seccion__titulo">Resumen económico</h2>
+    <dl class="datos">
+      <div class="datos__fila">
+        <dt class="datos__nombre">Material</dt>
+        <dd class="datos__valor">{{ euros.format(totalMaterial()) }}</dd>
+      </div>
+      <!-- Pendiente: el coste del corte todavía no está en la base de datos. -->
+      <div class="datos__fila">
+        <dt class="datos__nombre">Corte</dt>
+        <dd class="datos__valor">Por definir</dd>
+      </div>
+      <div class="datos__fila datos__fila--total">
+        <dt class="datos__nombre">Total estimado</dt>
+        <dd class="datos__valor">{{ euros.format(totalMaterial()) }}</dd>
+      </div>
+    </dl>
+  </section>
+</div>
+
+<section class="seccion envio">
+  <h2 class="seccion__titulo">Enviar solicitud</h2>
+  <p class="aviso">
+    Es una solicitud, no un pedido confirmado. El taller comprobará las medidas y el material antes
+    de aceptarla.
+  </p>
+  <div class="acciones">
+    <a class="boton boton--secundario" routerLink="/planificador">Seguir configurando</a>
+    <!-- Pendiente: POST /api/pedidos. -->
+    <button
+      class="boton boton--primario"
+      type="button"
+      disabled
+      title="El envío de solicitudes todavía no está disponible"
+    >
+      Enviar solicitud
+    </button>
+  </div>
+</section>
