@@ -21,6 +21,8 @@ import { calcularOpciones } from './opciones';
 interface Material extends Omit<TableroProyecto, 'optimizaciones'> {
   // Opción que eligió el cliente, o null para usar la recomendada.
   opcionElegida: string | null;
+  // Posición del tablero que se está viendo en la distribución.
+  tableroVisible: number;
 }
 
 @Component({
@@ -35,16 +37,22 @@ export class Planificador {
 
   protected readonly materiales = signal<Material[]>([]);
 
-  // Cada material con las opciones de tablero calculadas para sus piezas.
+  // Cada material con las opciones de tablero calculadas para sus piezas
+  // y los tableros físicos de la opción elegida, uno detrás de otro.
   protected readonly bloques = computed(() =>
-    this.materiales().map((material) => ({
-      material,
-      ...calcularOpciones(
+    this.materiales().map((material) => {
+      const opciones = calcularOpciones(
         material.piezas,
         this.tableros().filter((t) => esDelMaterial(t, material)),
         material.opcionElegida,
-      ),
-    })),
+      );
+      const tableros =
+        opciones.elegida?.detalles.flatMap((d) =>
+          d.unidades.map((unidad) => ({ formato: d.tablero.formato, unidad })),
+        ) ?? [];
+      const visible = Math.max(0, Math.min(material.tableroVisible, tableros.length - 1));
+      return { material, ...opciones, tableros, visible };
+    }),
   );
 
   protected readonly totalPiezas = computed(() =>
@@ -159,7 +167,15 @@ export class Planificador {
   }
 
   protected elegirOpcion(indiceMaterial: number, opcion: Optimizacion): void {
-    this.cambiarMaterial(indiceMaterial, (m) => ({ ...m, opcionElegida: opcion.nombreOpcion }));
+    this.cambiarMaterial(indiceMaterial, (m) => ({
+      ...m,
+      opcionElegida: opcion.nombreOpcion,
+      tableroVisible: 0,
+    }));
+  }
+
+  protected verTablero(indiceMaterial: number, indiceTablero: number): void {
+    this.cambiarMaterial(indiceMaterial, (m) => ({ ...m, tableroVisible: indiceTablero }));
   }
 
   protected contarTableros(opcion: Optimizacion): number {
@@ -179,6 +195,7 @@ export class Planificador {
           grosor: tablero.grosor,
           piezas: [pieza],
           opcionElegida: null,
+          tableroVisible: 0,
         },
       ]);
     } else {
