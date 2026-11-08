@@ -1,1 +1,285 @@
-<p>Aquí producción revisa las solicitudes y su plano de corte, las acepta o rechaza y cambia su estado. Administración gestiona usuarios, catálogo, inventario y facturas.</p>
+<h1>Panel del taller</h1>
+
+<div class="panel">
+  <nav class="panel__menu" aria-label="Secciones del panel">
+    <ul class="menu-lateral">
+      <li class="menu-lateral__item">
+        <a class="menu-lateral__enlace" routerLink="/admin" fragment="pedidos">Pedidos</a>
+      </li>
+      <li class="menu-lateral__item">
+        <a class="menu-lateral__enlace" routerLink="/admin" fragment="revision">Revisión</a>
+      </li>
+      <li class="menu-lateral__item">
+        <a class="menu-lateral__enlace" routerLink="/admin" fragment="materiales">
+          Materiales e inventario
+        </a>
+      </li>
+      <li class="menu-lateral__item">
+        <a class="menu-lateral__enlace" routerLink="/admin" fragment="usuarios">
+          Usuarios y roles
+        </a>
+      </li>
+      <li class="menu-lateral__item">
+        <a class="menu-lateral__enlace" routerLink="/admin" fragment="facturas">Facturas</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="panel__contenido">
+    <section class="seccion" id="pedidos">
+      <h2 class="seccion__titulo">Pedidos recibidos</h2>
+      <form class="filtros__formulario" (submit)="$event.preventDefault()">
+        <div class="campo">
+          <label class="campo__etiqueta" for="filtro-estado">Estado</label>
+          <select
+            class="campo__control"
+            id="filtro-estado"
+            #estadoSelect
+            (change)="cambiarFiltroEstado(estadoSelect.value)"
+          >
+            <option value="" [selected]="filtroEstado() === ''">Todos</option>
+            @for (estado of estados; track estado) {
+              <option [value]="estado" [selected]="estado === filtroEstado()">
+                {{ nombresEstado[estado] }}
+              </option>
+            }
+          </select>
+        </div>
+        <div class="campo">
+          <label class="campo__etiqueta" for="filtro-busqueda">Buscar</label>
+          <input
+            class="campo__control"
+            id="filtro-busqueda"
+            type="search"
+            placeholder="Nº, cliente o proyecto"
+            [value]="busqueda()"
+            (input)="busqueda.set($any($event.target).value)"
+          />
+        </div>
+      </form>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th scope="col">Nº</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Material</th>
+            <th scope="col">Estado</th>
+            <th scope="col"><span class="oculto">Acción</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pedido of filtrados(); track pedido.id) {
+            <tr [class.tabla__fila--seleccionada]="pedido.id === seleccionadoId()">
+              <td>{{ numeroPedido(pedido) }}</td>
+              <td>{{ pedido.persona.nombre }} {{ pedido.persona.apellidos }}</td>
+              <td>{{ materiales(pedido) }}</td>
+              <td>
+                <span [class]="'estado estado--' + pedido.estado">
+                  {{ nombresEstado[pedido.estado] }}
+                </span>
+              </td>
+              <td class="tabla__accion">
+                <a
+                  class="boton boton--secundario"
+                  routerLink="/admin"
+                  fragment="revision"
+                  (click)="seleccionadoId.set(pedido.id)"
+                >
+                  Revisar
+                </a>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="seccion__vacio" colspan="5">No hay pedidos con estos filtros.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="seccion revision" id="revision">
+      <h2 class="seccion__titulo">Revisión del pedido</h2>
+      @if (seleccionado(); as pedido) {
+        <div class="revision__contenido">
+          <div class="revision__planos">
+            @for (plano of planos(); track $index) {
+              <figure class="revision__plano">
+                <app-plano-corte
+                  [formato]="plano.formato"
+                  [unidad]="plano.unidad"
+                  [piezas]="plano.material.piezas"
+                  [color]="plano.material.acabado.colorBase"
+                />
+                <figcaption class="revision__leyenda">
+                  {{ plano.material.tipoTablero.nombre }} · {{ plano.material.acabado.nombre }} ·
+                  tablero {{ plano.unidad.numeroTablero }} · {{ plano.formato.anchoMm }} ×
+                  {{ plano.formato.altoMm }} mm
+                </figcaption>
+              </figure>
+            }
+          </div>
+
+          <div class="revision__formulario">
+            <dl class="datos">
+              <div class="datos__fila">
+                <dt class="datos__nombre">Pedido</dt>
+                <dd class="datos__valor">
+                  {{ numeroPedido(pedido) }} · {{ pedido.proyecto.nombre }}
+                </dd>
+              </div>
+              <div class="datos__fila">
+                <dt class="datos__nombre">Cliente</dt>
+                <dd class="datos__valor">
+                  {{ pedido.persona.nombre }} {{ pedido.persona.apellidos }}
+                </dd>
+              </div>
+              <div class="datos__fila">
+                <dt class="datos__nombre">Material</dt>
+                <dd class="datos__valor">{{ materiales(pedido) }}</dd>
+              </div>
+              <div class="datos__fila">
+                <dt class="datos__nombre">Piezas</dt>
+                <dd class="datos__valor">{{ piezas(pedido) }}</dd>
+              </div>
+              <div class="datos__fila">
+                <dt class="datos__nombre">Total</dt>
+                <dd class="datos__valor">{{ euros.format(pedido.importeFinal) }}</dd>
+              </div>
+            </dl>
+            <div class="campo">
+              <label class="campo__etiqueta" for="revision-estado">Estado</label>
+              <select
+                class="campo__control"
+                id="revision-estado"
+                #nuevoSelect
+                (change)="estadoNuevo.set($any(nuevoSelect.value))"
+              >
+                @for (estado of estados; track estado) {
+                  <option [value]="estado" [selected]="estado === estadoNuevo()">
+                    {{ nombresEstado[estado] }}
+                  </option>
+                }
+              </select>
+            </div>
+            <div class="campo">
+              <label class="campo__etiqueta" for="revision-motivo">Motivo de rechazo</label>
+              <textarea
+                class="campo__control"
+                id="revision-motivo"
+                rows="3"
+                [value]="motivo()"
+                (input)="motivo.set($any($event.target).value)"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button
+            class="boton boton--primario"
+            type="button"
+            [disabled]="pedido.estado !== 'pendiente'"
+            (click)="cambiarEstado('aceptado')"
+          >
+            Aceptar
+          </button>
+          <button
+            class="boton boton--secundario"
+            type="button"
+            [disabled]="pedido.estado !== 'pendiente' || !motivo().trim()"
+            title="Escribe antes el motivo del rechazo"
+            (click)="cambiarEstado('rechazado')"
+          >
+            Rechazar
+          </button>
+          <button
+            class="boton boton--secundario"
+            type="button"
+            [disabled]="estadoNuevo() === pedido.estado"
+            (click)="cambiarEstado(estadoNuevo())"
+          >
+            Guardar estado
+          </button>
+          <button class="boton boton--secundario" type="button" (click)="imprimir()">
+            Imprimir ficha
+          </button>
+        </div>
+      } @else {
+        <p class="seccion__vacio">Elige un pedido de la lista para revisarlo.</p>
+      }
+    </section>
+
+    <section class="seccion" id="materiales">
+      <h2 class="seccion__titulo">Materiales e inventario</h2>
+      <!-- Pendiente: los formularios de tablero y de entrada de material. -->
+      <div class="acciones">
+        <button class="boton boton--secundario" type="button" disabled>+ Nuevo tablero</button>
+        <button class="boton boton--secundario" type="button" disabled>
+          + Entrada de material
+        </button>
+      </div>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th scope="col">Material</th>
+            <th scope="col">Formato</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Existencias</th>
+            <th scope="col"><span class="oculto">Acción</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (tablero of tableros(); track tablero.id) {
+            <tr [class.tabla__fila--aviso]="tablero.stockActual === 0">
+              <td>{{ tablero.descripcion }}</td>
+              <td>{{ tablero.formato.anchoMm }} × {{ tablero.formato.altoMm }} mm</td>
+              <td>{{ euros.format(tablero.precioTablero) }}</td>
+              <td>{{ tablero.stockActual }}</td>
+              <td class="tabla__accion">
+                <button class="boton boton--secundario" type="button" disabled>Editar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="seccion" id="usuarios">
+      <h2 class="seccion__titulo">Usuarios y roles</h2>
+      <!-- Pendiente: el formulario de usuario. -->
+      <div class="acciones">
+        <button class="boton boton--secundario" type="button" disabled>+ Nuevo usuario</button>
+      </div>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Activo</th>
+            <th scope="col"><span class="oculto">Acción</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (usuario of usuarios; track usuario.email) {
+            <tr>
+              <td>{{ usuario.persona.nombre }} {{ usuario.persona.apellidos }}</td>
+              <td>{{ usuario.email }}</td>
+              <td>{{ usuario.rol.nombre }}</td>
+              <td>{{ usuario.activo ? 'Sí' : 'No' }}</td>
+              <td class="tabla__accion">
+                <button class="boton boton--secundario" type="button" disabled>Editar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="seccion" id="facturas">
+      <h2 class="seccion__titulo">Facturas</h2>
+      <p class="seccion__vacio">Las propuestas de factura todavía no están disponibles.</p>
+    </section>
+  </div>
+</div>
