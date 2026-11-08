@@ -1,1 +1,39 @@
-<p>Aquí el cliente ve sus solicitudes y pedidos, en qué estado están y su historial.</p>
+<h1>Mis pedidos</h1>
+
+<section class="seccion historial">
+  <h2 class="seccion__titulo">Historial de pedidos</h2>
+  @if (pedidos.length > 0) {
+    <table class="tabla historial__tabla">
+      <thead>
+        <tr>
+          <th scope="col">Nº</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Total</th>
+          <th scope="col"><span class="oculto">Acción</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pedido of pedidos; track pedido.id) {
+          <tr>
+            <td>{{ numeroPedido(pedido) }}</td>
+            <td>{{ fecha(pedido.fechaPedido) }}</td>
+            <td>{{ pedido.proyecto.nombre }}</td>
+            <td>
+              <span [class]="'estado estado--' + pedido.estado">
+                {{ nombresEstado[pedido.estado] }}
+              </span>
+            </td>
+            <td>{{ euros.format(pedido.importeFinal) }}</td>
+            <td class="tabla__accion">
+              <a class="boton boton--secundario" [routerLink]="['/pedido', pedido.id]">Ver</a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="seccion__vacio">Todavía no has enviado ninguna solicitud.</p>
+  }
+</section>

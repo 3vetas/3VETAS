@@ -1,1 +1,161 @@
-<p>Aquí sale la hoja de un pedido con el despiece y el plano de corte. Se puede imprimir o descargar.</p>
+@if (pedido(); as pedido) {
+  <h1>Pedido {{ numeroPedido(pedido) }} · {{ pedido.proyecto.nombre }}</h1>
+
+  <div class="pedido">
+    <section class="seccion pedido__datos">
+      <h2 class="seccion__titulo">Datos del pedido</h2>
+      <dl class="datos">
+        <div class="datos__fila">
+          <dt class="datos__nombre">Número</dt>
+          <dd class="datos__valor">{{ numeroPedido(pedido) }}</dd>
+        </div>
+        <div class="datos__fila">
+          <dt class="datos__nombre">Fecha</dt>
+          <dd class="datos__valor">{{ fecha(pedido.fechaPedido) }}</dd>
+        </div>
+        <div class="datos__fila">
+          <dt class="datos__nombre">Estado</dt>
+          <dd class="datos__valor">
+            <span [class]="'estado estado--' + pedido.estado">
+              {{ nombresEstado[pedido.estado] }}
+            </span>
+          </dd>
+        </div>
+        <div class="datos__fila">
+          <dt class="datos__nombre">Cliente</dt>
+          <dd class="datos__valor">{{ pedido.persona.nombre }} {{ pedido.persona.apellidos }}</dd>
+        </div>
+        <div class="datos__fila">
+          <dt class="datos__nombre">Materiales</dt>
+          <dd class="datos__valor">
+            @for (m of materiales(); track $index) {
+              <span class="pedido__material">
+                {{ m.material.tipoTablero.nombre }} · {{ m.material.acabado.nombre }} ·
+                {{ m.material.grosor.valorMm }} mm
+              </span>
+            }
+          </dd>
+        </div>
+        <div class="datos__fila">
+          <dt class="datos__nombre">Piezas · tableros</dt>
+          <dd class="datos__valor">{{ totalPiezas() }} · {{ totalTableros() }}</dd>
+        </div>
+        <div class="datos__fila">
+          <dt class="datos__nombre">Base imponible</dt>
+          <dd class="datos__valor">{{ euros.format(pedido.baseImponible) }}</dd>
+        </div>
+        <div class="datos__fila">
+          <dt class="datos__nombre">IVA</dt>
+          <dd class="datos__valor">{{ euros.format(pedido.importeIva) }}</dd>
+        </div>
+        <div class="datos__fila datos__fila--total">
+          <dt class="datos__nombre">Total</dt>
+          <dd class="datos__valor">{{ euros.format(pedido.importeFinal) }}</dd>
+        </div>
+      </dl>
+      @if (pedido.estado === 'rechazado' && motivo()) {
+        <p class="aviso aviso--error">Motivo del rechazo: {{ motivo() }}</p>
+      }
+    </section>
+
+    <section class="seccion pedido__historial">
+      <h2 class="seccion__titulo">Historial de estados</h2>
+      <ol class="historial-estados">
+        @for (cambio of pedido.historial; track $index) {
+          <li class="historial-estados__cambio">
+            <span [class]="'estado estado--' + cambio.estado">
+              {{ nombresEstado[cambio.estado] }}
+            </span>
+            <time class="historial-estados__fecha" [attr.datetime]="cambio.fechaEstado">
+              {{ fecha(cambio.fechaEstado) }}
+            </time>
+            @if (cambio.comentario) {
+              <p class="historial-estados__comentario">{{ cambio.comentario }}</p>
+            }
+          </li>
+        }
+      </ol>
+    </section>
+  </div>
+
+  @for (m of materiales(); track $index) {
+    @let material = m.material;
+    <section class="seccion despiece">
+      <h2 class="seccion__titulo">
+        {{ material.tipoTablero.nombre }} · {{ material.acabado.nombre }} ·
+        {{ material.grosor.valorMm }} mm
+      </h2>
+      <table class="tabla despiece__tabla">
+        <caption class="despiece__titulo">
+          Despiece
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Pieza</th>
+            <th scope="col">Medidas (mm)</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Girar</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pieza of material.piezas; track $index) {
+            <tr>
+              <td>{{ pieza.descripcion }}</td>
+              <td>{{ pieza.anchoMm }} × {{ pieza.altoMm }}</td>
+              <td>{{ pieza.cantidad }}</td>
+              <td>{{ pieza.rotacionPermitida ? 'Sí' : 'No' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <h3 class="despiece__titulo">Plano de corte</h3>
+      @if (m.elegida; as opcion) {
+        <div class="despiece__planos">
+          @for (detalle of opcion.detalles; track detalle.tablero.id) {
+            @for (unidad of detalle.unidades; track unidad.numeroTablero) {
+              <figure class="despiece__plano">
+                <app-plano-corte
+                  [formato]="detalle.tablero.formato"
+                  [unidad]="unidad"
+                  [piezas]="material.piezas"
+                  [color]="material.acabado.colorBase"
+                />
+                <figcaption class="despiece__leyenda">
+                  Tablero {{ unidad.numeroTablero }} de {{ detalle.cantidad }} ·
+                  {{ detalle.tablero.formato.anchoMm }} × {{ detalle.tablero.formato.altoMm }} mm
+                </figcaption>
+              </figure>
+            }
+          }
+        </div>
+      } @else {
+        <p class="seccion__vacio">Este material no tiene plano de corte.</p>
+      }
+    </section>
+  }
+
+  <section class="seccion documentos">
+    <h2 class="seccion__titulo">Documentos</h2>
+    <div class="acciones">
+      <button class="boton boton--primario" type="button" (click)="imprimir()">
+        Imprimir hoja de pedido
+      </button>
+      <!-- Pendiente: las propuestas de factura. -->
+      <button
+        class="boton boton--secundario"
+        type="button"
+        disabled
+        title="Las facturas todavía no están disponibles"
+      >
+        Descargar factura
+      </button>
+      <a class="boton boton--secundario" routerLink="/pedidos">Volver a mis pedidos</a>
+    </div>
+  </section>
+} @else {
+  <h1>Pedido no encontrado</h1>
+  <p class="seccion__vacio">
+    No existe el pedido {{ id() }}. <a routerLink="/pedidos">Volver a mis pedidos</a>
+  </p>
+}
