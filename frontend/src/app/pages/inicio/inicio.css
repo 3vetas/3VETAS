@@ -1,0 +1,37 @@
+.portada {
+  margin: 0;
+  background: rgb(138 150 75 / 12%);
+
+  padding: 5rem 2rem;
+  margin-inline: -1.5rem;
+  margin-top: -1.5rem;
+}
+
+.portada__titulo span{
+  color: var(--color-mostaza);
+}
+
+.portada__titulo,
+.portada__texto,
+.acciones {
+  max-width: 40rem;
+}
+
+.pasos {
+  padding: 2rem 0;
+}
+
+.pasos__lista {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.taller__datos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+

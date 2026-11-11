@@ -57,7 +57,6 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-
   font-family: var(--fuente-principal);
   color: var(--color-texto);
   background-color: var(--color-fondo);
@@ -120,3 +119,38 @@ body {
   border-color: var(--color-oliva);
   background-color: rgb(138 150 75 / 12%);
 }
+
+.acciones {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.seccion {
+  padding: 4rem 0;
+}
+
+.seccion__titulo {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tarjeta {
+  background: white;
+  border: 3px solid  rgb(138 150 75 / 20%);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.tarjeta__titulo {
+  font-family: var(--fuente-tecnica);
+  color: var(--color-oliva);
+  font-size: 1rem;
+  border-left: 4px solid var(--color-mostaza);
+  padding-left: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tarjeta__texto {
+  line-height: 1.6;
+}
+
