@@ -71,3 +71,52 @@ body {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Botones */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.75rem 1.5rem;
+
+  font-family: var(--fuente-principal);
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  text-decoration: none;
+  text-transform: uppercase;
+
+  border-radius: 0.35rem;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.boton--primario {
+  background-color: var(--color-oliva);
+  border: 2px solid var(--color-oliva);
+  color: var(--color-blanco);
+}
+
+.boton--primario:hover {
+  background-color: var(--color-mostaza);
+  border-color: var(--color-mostaza);
+  color: var(--color-blanco);
+}
+
+.boton--secundario {
+  background-color: transparent;
+  border: 2px solid currentColor;
+  color: inherit;
+
+}
+
+.boton--secundario:hover {
+  border-color: var(--color-oliva);
+  background-color: rgb(138 150 75 / 12%);
+}

@@ -1,7 +1,7 @@
 .cabecera {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   gap: 1rem;
   padding: 1.5rem 1.5rem;
   background-color: var(--color-gris);
@@ -31,6 +31,7 @@
   padding: 0;
   list-style: none;
   font-family: var(--fuente-tecnica);
+  transform: translateY(20px);
 }
 
 .menu__enlace {
@@ -48,4 +49,11 @@
 
 .menu__enlace--activo {
   border-bottom-color: var(--color-oliva);
+}
+
+.cabecera__acceso {
+  color: var(--color-texto-contraste);
+  font-family: var(--fuente-tecnica);
+  padding: 0.5rem 1rem;
+  transform: translateY(20px);
 }
