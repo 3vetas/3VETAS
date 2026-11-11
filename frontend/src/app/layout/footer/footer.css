@@ -1,13 +1,56 @@
 .pie {
-  padding: 1.5rem;
   border-top: 1px solid #ddd;
-  text-align: center;
+  font-family: var(--fuente-principal);
+  text-align: left;
   font-size: 0.9rem;
+  background-color: var(--color-gris);
+  color: var(--color-texto-contraste);
+  padding: 3rem 2rem 1.5rem;
 }
 
-.pie__marca,
-.pie__contacto,
-.pie__horario {
-  margin: 0.25rem 0;
+.pie__contenido {
+  display: grid;
+
+  grid-template-columns:
+    1.2fr
+    1fr
+    1fr
+    0.8fr;
+  gap: 3rem;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.pie__logo {
+  height: 36px;
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+.pie__marca strong,
+.pie__marca span {
+  font-family: var(--fuente-tecnica);
+}
+
+.pie__inferior {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(255 255 255 / 15%);
+}
+
+.pie__servicios h3,
+.pie__contacto h3,
+.pie__horario h3,
+.pie__inferior {
+  font-family: var(--fuente-tecnica);
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.pie__contacto address{
   font-style: normal;
 }
