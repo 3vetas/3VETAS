@@ -1,0 +1,103 @@
+
+# ============================================================
+# 3VETAS API - CONFIGURACION GENERAL
+# ============================================================
+
+spring.application.name=3vetas-api
+server.port=${SERVER_PORT:8080}
+server.servlet.context-path=/api
+
+# ============================================================
+# BASE DE DATOS - MYSQL
+# ============================================================
+
+spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/3vetas?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+
+# ============================================================
+# JPA / HIBERNATE
+# ============================================================
+
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.open-in-view=false
+spring.jpa.properties.hibernate.jdbc.time_zone=UTC
+
+# ============================================================
+# FLYWAY
+# ============================================================
+
+spring.flyway.enabled=true
+spring.flyway.locations=classpath:db/migration
+spring.flyway.encoding=UTF-8
+spring.flyway.clean-disabled=true
+
+# ============================================================
+# SECURITY - JWT
+# ============================================================
+
+app.security.jwt.private-key=${JWT_PRIVATE_KEY_PATH}
+app.security.jwt.public-key=${JWT_PUBLIC_KEY_PATH}
+app.security.jwt.issuer=3vetas-api
+app.security.jwt.access-token-expiration=900
+
+# ============================================================
+# SECURITY - COOKIES
+# ============================================================
+
+app.security.cookie.name=3vetas_access_token
+app.security.cookie.http-only=true
+app.security.cookie.secure=${COOKIE_SECURE:false}
+app.security.cookie.same-site=${COOKIE_SAME_SITE:Lax}
+app.security.cookie.path=/api
+
+# ============================================================
+# SECURITY - DOBLE FACTOR DE AUTENTICACION
+# ============================================================
+
+# Duraciones expresadas en segundos
+app.security.two-factor.code-expiration=300
+app.security.two-factor.max-attempts=5
+app.security.two-factor.resend-cooldown=60
+app.security.two-factor.max-resends=3
+
+# ============================================================
+# SECURITY - RECUPERACION DE CONTRASENA
+# ============================================================
+
+app.security.password-reset.token-expiration=900
+app.security.password-reset.frontend-url=${FRONTEND_URL:http://localhost:5173}
+
+# ============================================================
+# SECURITY - CORS
+# ============================================================
+
+app.security.cors.allowed-origins=${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+app.security.cors.allow-credentials=true
+
+# ============================================================
+# GOOGLE GMAIL API - NOTIFICACIONES
+# ============================================================
+
+app.mail.gmail.sender=${GMAIL_SENDER}
+app.mail.gmail.client-id=${GMAIL_CLIENT_ID}
+app.mail.gmail.client-secret=${GMAIL_CLIENT_SECRET}
+app.mail.gmail.refresh-token=${GMAIL_REFRESH_TOKEN}
+
+app.mail.gmail.token-uri=https://oauth2.googleapis.com/token
+app.mail.gmail.api-base-url=https://gmail.googleapis.com/gmail/v1
+
+# ============================================================
+# DOCUMENTACION OPENAPI / SWAGGER
+# ============================================================
+
+springdoc.api-docs.enabled=${OPENAPI_ENABLED:true}
+springdoc.swagger-ui.enabled=${SWAGGER_ENABLED:true}
+
+# ============================================================
+# ACTUATOR
+# ============================================================
+
+management.endpoints.web.base-path=/system
+management.endpoints.web.exposure.include=health,info
+management.endpoint.health.show-details=never
