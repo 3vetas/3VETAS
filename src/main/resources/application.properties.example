@@ -66,13 +66,13 @@ app.security.two-factor.max-resends=3
 # ============================================================
 
 app.security.password-reset.token-expiration=900
-app.security.password-reset.frontend-url=${FRONTEND_URL:http://localhost:5173}
+app.security.password-reset.frontend-url=${FRONTEND_URL:http://localhost:4200}
 
 # ============================================================
 # SECURITY - CORS
 # ============================================================
 
-app.security.cors.allowed-origins=${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+app.security.cors.allowed-origins=${CORS_ALLOWED_ORIGINS:http://localhost:4200}
 app.security.cors.allow-credentials=true
 
 # ============================================================
