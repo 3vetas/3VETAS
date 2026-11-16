@@ -12,7 +12,7 @@ import { NOMBRES_ESTADO, numeroPedido } from '../../models/pedido';
 })
 export class Pedidos {
   // Datos de prueba hasta que exista GET /api/pedidos/mis-pedidos. Del más reciente al más antiguo.
-  protected readonly pedidos = PEDIDOS.filter((p) => p.persona.dni === CLIENTE.dni).sort((a, b) =>
+  protected readonly pedidos = PEDIDOS.filter((p) => p.personaId === CLIENTE.id).sort((a, b) =>
     b.fechaPedido.localeCompare(a.fechaPedido),
   );
 

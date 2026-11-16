@@ -1,4 +1,4 @@
-import { Pedido, PedidoEstado } from '../models/pedido';
+import { Pedido, PedidoCompleto, PedidoEstado, Proyecto } from '../models/pedido';
 import { Pieza, TableroProyecto } from '../models/planificador';
 import { Persona } from '../models/usuario';
 import { calcularOpciones } from '../pages/planificador/opciones';
@@ -21,20 +21,20 @@ const tableros = completarTableros({
   grosores: GROSORES,
 });
 
-// Cliente con la sesión iniciada mientras no haya login.
-export const CLIENTE: Persona = {
-  nombre: 'Ana',
-  apellidos: 'Martínez López',
-  telefono: '600 123 456',
-  dni: '12345678Z',
-};
+export const PERSONAS: Persona[] = [
+  { id: 1, nombre: 'Ana', apellidos: 'Martínez López', telefono: '600 123 456', dni: '12345678Z' },
+  {
+    id: 2,
+    nombre: 'Mikel',
+    apellidos: 'Etxeberria Ruiz',
+    telefono: '611 987 654',
+    dni: '87654321X',
+  },
+];
 
-const otroCliente: Persona = {
-  nombre: 'Mikel',
-  apellidos: 'Etxeberria Ruiz',
-  telefono: '611 987 654',
-  dni: '87654321X',
-};
+// Cliente con la sesión iniciada mientras no haya login.
+export const CLIENTE = PERSONAS[0];
+const otroCliente = PERSONAS[1];
 
 // Las optimizaciones se calculan con el mismo algoritmo que el planificador, como si el
 // cliente hubiera dejado la opción recomendada.
@@ -72,30 +72,47 @@ function pedido(
   descripcion: string,
   tableros: TableroProyecto[],
   historial: Cambio[],
-): Pedido {
+): { pedido: Pedido; proyecto: Proyecto } {
   const baseImponible = tableros
     .flatMap((t) => t.optimizaciones.filter((o) => o.seleccionada))
     .reduce((total, o) => total + o.costeEstimado, 0);
   const importeIva = Math.round(baseImponible * IVA * 100) / 100;
-  return {
+  const fechaPedido = historial[0].fechaEstado;
+  const ultimoCambio = historial[historial.length - 1];
+  const proyecto: Proyecto = {
+    id: 100 + id,
+    // En los datos de prueba el usuario tiene el mismo id que su persona.
+    usuarioId: persona.id,
+    nombre,
+    descripcion,
+    estado: 'pedido',
+    fechaCreacion: fechaPedido,
+    fechaModificacion: fechaPedido,
+    tableros,
+  };
+  const pedido: Pedido = {
     id,
-    persona,
-    proyecto: { nombre, descripcion, tableros },
-    estado: historial[historial.length - 1].estado,
+    personaId: persona.id,
+    proyectoId: proyecto.id,
+    direccionEnvioId: persona.id * 10 + 1,
+    direccionFacturacionId: persona.id * 10 + 2,
+    estado: ultimoCambio.estado,
     baseImponible,
     descuento: 0,
     importeIva,
     importeFinal: baseImponible + importeIva,
-    fechaPedido: historial[0].fechaEstado,
+    fechaPedido,
+    fechaActualizacion: ultimoCambio.fechaEstado,
     historialEstados: historial.map((cambio, i) => ({
       id: id * 10 + i + 1,
       usuarioId: ID_USUARIO_TALLER,
       ...cambio,
     })),
   };
+  return { pedido, proyecto };
 }
 
-export const PEDIDOS: Pedido[] = [
+const datos = [
   pedido(
     4,
     CLIENTE,
@@ -167,3 +184,12 @@ export const PEDIDOS: Pedido[] = [
     [{ estado: 'pendiente', comentario: '', fechaEstado: '2026-11-01T17:25:00' }],
   ),
 ];
+
+export const PROYECTOS: Proyecto[] = datos.map((d) => d.proyecto);
+
+// Reúne lo que el backend devuelve por separado. Cuando existan los endpoints lo hará un servicio.
+export const PEDIDOS: PedidoCompleto[] = datos.map(({ pedido }) => ({
+  ...pedido,
+  persona: PERSONAS.find((p) => p.id === pedido.personaId)!,
+  proyecto: PROYECTOS.find((p) => p.id === pedido.proyectoId)!,
+}));

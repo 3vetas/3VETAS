@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { PlanoCorte } from '../../components/plano-corte/plano-corte';
 import { ID_USUARIO_TALLER, PEDIDOS } from '../../mocks/pedidos';
 import { USUARIOS } from '../../mocks/usuarios';
-import { EstadoPedido, NOMBRES_ESTADO, numeroPedido, Pedido } from '../../models/pedido';
+import { EstadoPedido, NOMBRES_ESTADO, numeroPedido, PedidoCompleto } from '../../models/pedido';
 import { Catalogo } from '../../services/catalogo';
 
 @Component({
@@ -60,7 +60,7 @@ export class Admin {
   );
   protected readonly motivo = linkedSignal({ source: this.seleccionadoId, computation: () => '' });
 
-  protected materiales(pedido: Pedido): string {
+  protected materiales(pedido: PedidoCompleto): string {
     return pedido.proyecto.tableros
       .map(
         (t) => `${t.tipoTablero.nombre} ${t.acabado.nombre.toLowerCase()} ${t.grosor.espesorMm} mm`,
@@ -68,7 +68,7 @@ export class Admin {
       .join(', ');
   }
 
-  protected piezas(pedido: Pedido): number {
+  protected piezas(pedido: PedidoCompleto): number {
     return pedido.proyecto.tableros
       .flatMap((t) => t.piezas)
       .reduce((total, p) => total + p.cantidad, 0);
@@ -109,7 +109,7 @@ export class Admin {
   }
 }
 
-function textoBuscable(pedido: Pedido): string {
+function textoBuscable(pedido: PedidoCompleto): string {
   const { persona, proyecto } = pedido;
   return [numeroPedido(pedido), persona.nombre, persona.apellidos, proyecto.nombre]
     .join(' ')

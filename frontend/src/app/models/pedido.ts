@@ -22,8 +22,14 @@ export const NOMBRES_ESTADO: Record<EstadoPedido, string> = {
 };
 
 export interface Proyecto {
+  id: number;
+  usuarioId: number;
   nombre: string;
   descripcion: string;
+  // Sus valores todavía no están definidos en el backend.
+  estado: string;
+  fechaCreacion: string;
+  fechaModificacion: string;
   tableros: TableroProyecto[];
 }
 
@@ -37,17 +43,27 @@ export interface PedidoEstado {
   fechaEstado: string;
 }
 
+// El backend devuelve el pedido solo con los id de su cliente, su proyecto y sus direcciones.
 export interface Pedido {
   id: number;
-  persona: Persona;
-  proyecto: Proyecto;
+  personaId: number;
+  proyectoId: number;
+  direccionEnvioId: number;
+  direccionFacturacionId: number;
   estado: EstadoPedido;
   baseImponible: number;
   descuento: number;
   importeIva: number;
   importeFinal: number;
   fechaPedido: string;
+  fechaActualizacion: string;
   historialEstados: PedidoEstado[];
+}
+
+// El pedido con su cliente y su proyecto ya reunidos para mostrarlo.
+export interface PedidoCompleto extends Pedido {
+  persona: Persona;
+  proyecto: Proyecto;
 }
 
 // Número que ve el cliente, por ejemplo #0007.

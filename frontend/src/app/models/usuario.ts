@@ -6,6 +6,7 @@ export interface Rol {
 }
 
 export interface Persona {
+  id: number;
   nombre: string;
   apellidos: string;
   telefono: string;
