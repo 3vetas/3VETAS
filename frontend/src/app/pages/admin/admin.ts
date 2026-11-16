@@ -59,7 +59,7 @@ export class Admin {
   protected readonly motivo = linkedSignal({ source: this.seleccionadoId, computation: () => '' });
 
   protected materiales(pedido: PedidoCompleto): string {
-    return pedido.proyecto.tableros
+    return pedido.materiales
       .map(
         (t) => `${t.tipoTablero.nombre} ${t.acabado.nombre.toLowerCase()} ${t.grosor.espesorMm} mm`,
       )

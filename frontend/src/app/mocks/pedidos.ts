@@ -60,9 +60,9 @@ function material(idTablero: number, piezas: Pieza[]): MaterialConOpciones {
   return {
     material: {
       id,
-      tipoTablero: base.tipoTablero,
-      acabado: base.acabado,
-      grosor: base.grosor,
+      tipoTableroId: base.tipoTableroId,
+      acabadoId: base.acabadoId,
+      grosorId: base.grosorId,
       piezas,
     },
     optimizaciones: calcularOpciones(piezas, candidatos, null).optimizaciones.map((o) => ({

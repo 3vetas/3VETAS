@@ -3,13 +3,21 @@ import { Acabado, Grosor, TipoTablero } from './catalogo';
 // Los id y las fechas los asigna el backend al guardar: faltan mientras el proyecto solo está
 // en el planificador.
 
-// Un material del proyecto (tipo, acabado y grosor) con sus piezas.
+// Un material del proyecto (tipo, acabado y grosor) con sus piezas. El backend lo devuelve solo
+// con los id de sus características.
 export interface TableroProyecto {
   id?: number;
+  tipoTableroId: number;
+  acabadoId: number;
+  grosorId: number;
+  piezas: Pieza[];
+}
+
+// El material con sus características, sacadas del catálogo para mostrarlo.
+export interface MaterialCompleto extends TableroProyecto {
   tipoTablero: TipoTablero;
   acabado: Acabado;
   grosor: Grosor;
-  piezas: Pieza[];
 }
 
 export interface Pieza {

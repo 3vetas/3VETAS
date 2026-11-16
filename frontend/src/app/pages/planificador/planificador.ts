@@ -12,13 +12,13 @@ import { form, FormField, FormRoot, required, SchemaPath, validate } from '@angu
 
 import { PlanoCorte } from '../../components/plano-corte/plano-corte';
 import { TableroCompleto } from '../../models/catalogo';
-import { Optimizacion, Pieza, TableroProyecto } from '../../models/planificador';
+import { MaterialCompleto, Optimizacion, Pieza } from '../../models/planificador';
 import { Catalogo } from '../../services/catalogo';
 import { cabe, GROSOR_SIERRA_MM } from './colocacion';
 import { calcularOpciones } from './opciones';
 
 // Un material del proyecto con sus piezas. Sus optimizaciones se calculan a partir de ellas.
-interface Material extends TableroProyecto {
+interface Material extends MaterialCompleto {
   // Opción que eligió el cliente, o null para usar la recomendada.
   opcionElegida: string | null;
   // Posición del tablero que se está viendo en la distribución.
@@ -194,6 +194,9 @@ export class Planificador {
       this.materiales.update((materiales) => [
         ...materiales,
         {
+          tipoTableroId: tablero.tipoTableroId,
+          acabadoId: tablero.acabadoId,
+          grosorId: tablero.grosorId,
           tipoTablero: tablero.tipoTablero,
           acabado: tablero.acabado,
           grosor: tablero.grosor,
@@ -216,9 +219,9 @@ export class Planificador {
 
 function esDelMaterial(tablero: TableroCompleto, material: Material): boolean {
   return (
-    tablero.tipoTableroId === material.tipoTablero.id &&
-    tablero.acabadoId === material.acabado.id &&
-    tablero.grosorId === material.grosor.id
+    tablero.tipoTableroId === material.tipoTableroId &&
+    tablero.acabadoId === material.acabadoId &&
+    tablero.grosorId === material.grosorId
   );
 }
 

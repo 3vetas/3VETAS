@@ -1,5 +1,10 @@
 import { Formato, TableroCompleto } from './catalogo';
-import { Optimizacion, TableroProyecto, UnidadTableroOptimizacion } from './planificador';
+import {
+  MaterialCompleto,
+  Optimizacion,
+  TableroProyecto,
+  UnidadTableroOptimizacion,
+} from './planificador';
 import { Persona } from './usuario';
 
 // Estados de PEDIDOS.estado en la BBDD revisada.
@@ -78,7 +83,7 @@ export interface PedidoCompleto extends Pedido {
 }
 
 // Un material del proyecto con los tableros físicos de la optimización que se compró.
-export interface MaterialPedido extends TableroProyecto {
+export interface MaterialPedido extends MaterialCompleto {
   planos: PlanoTablero[];
 }
 
@@ -107,7 +112,7 @@ export function completarPedido(pedido: Pedido, datos: DatosPedido): PedidoCompl
     persona: buscar(datos.personas, pedido.personaId),
     proyecto,
     materiales: proyecto.tableros.map((material) => ({
-      ...material,
+      ...completarMaterial(material, datos.tableros),
       planos: compradas
         .filter((o) => o?.tableroProyectoId === material.id)
         .flatMap((o) => o?.detalles ?? [])
@@ -120,6 +125,20 @@ export function completarPedido(pedido: Pedido, datos: DatosPedido): PedidoCompl
         ),
     })),
   };
+}
+
+// Cualquier tablero del catálogo que sea de ese material sirve para conocer sus características.
+function completarMaterial(
+  material: TableroProyecto,
+  tableros: TableroCompleto[],
+): MaterialCompleto {
+  const { tipoTablero, acabado, grosor } = tableros.find(
+    (t) =>
+      t.tipoTableroId === material.tipoTableroId &&
+      t.acabadoId === material.acabadoId &&
+      t.grosorId === material.grosorId,
+  )!;
+  return { ...material, tipoTablero, acabado, grosor };
 }
 
 // Las claves ajenas de la base de datos garantizan que el id existe.
