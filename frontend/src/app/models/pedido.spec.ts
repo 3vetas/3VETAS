@@ -1,10 +1,11 @@
 import { ACABADOS, FORMATOS, GROSORES, TABLEROS, TIPOS_TABLERO } from '../mocks/catalogo';
 import { completarTableros } from '../services/catalogo';
+import { TableroCompleto } from './catalogo';
 import { completarPedido, Pedido, Proyecto } from './pedido';
 import { Optimizacion, UnidadTableroOptimizacion } from './planificador';
 import { Persona } from './usuario';
 
-const [tablero] = completarTableros({
+const [pequeno, grande] = completarTableros({
   tableros: TABLEROS,
   tipos: TIPOS_TABLERO,
   acabados: ACABADOS,
@@ -19,6 +20,7 @@ function unidad(numeroTablero: number): UnidadTableroOptimizacion {
 function optimizacion(
   id: number,
   tableroProyectoId: number,
+  tablero: TableroCompleto,
   unidades: UnidadTableroOptimizacion[],
 ): Optimizacion {
   const precio = unidades.length * tablero.precioTablero;
@@ -31,7 +33,7 @@ function optimizacion(
     porcentajeAprovechamiento: 0,
     costeEstimado: precio,
     seleccionada: true,
-    detalles: [{ tablero, cantidad: unidades.length, precio, unidades }],
+    detalles: [{ tableroId: tablero.id, cantidad: unidades.length, precio, unidades }],
   };
 }
 
@@ -78,11 +80,12 @@ describe('completarPedido', () => {
   const datos = {
     personas: [ana],
     proyectos: [proyecto],
+    tableros: [pequeno, grande],
     optimizaciones: [
-      optimizacion(21, 11, [unidad(1)]),
+      optimizacion(21, 11, pequeno, [unidad(1)]),
       // Otra opción del primer material que el cliente no compró.
-      optimizacion(22, 11, [unidad(1), unidad(2), unidad(3)]),
-      optimizacion(23, 12, [unidad(1), unidad(2)]),
+      optimizacion(22, 11, grande, [unidad(1), unidad(2), unidad(3)]),
+      optimizacion(23, 12, grande, [unidad(1), unidad(2)]),
     ],
   };
 
@@ -96,10 +99,10 @@ describe('completarPedido', () => {
   it('da a cada material los tableros físicos de la optimización que se compró', () => {
     const [primero, segundo] = completarPedido(pedido, datos).materiales;
 
-    expect(primero.planos).toEqual([{ formato: tablero.formato, unidad: unidad(1), cantidad: 1 }]);
+    expect(primero.planos).toEqual([{ formato: pequeno.formato, unidad: unidad(1), cantidad: 1 }]);
     expect(segundo.planos).toEqual([
-      { formato: tablero.formato, unidad: unidad(1), cantidad: 2 },
-      { formato: tablero.formato, unidad: unidad(2), cantidad: 2 },
+      { formato: grande.formato, unidad: unidad(1), cantidad: 2 },
+      { formato: grande.formato, unidad: unidad(2), cantidad: 2 },
     ]);
   });
 });

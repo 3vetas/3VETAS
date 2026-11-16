@@ -1,4 +1,4 @@
-import { Acabado, Grosor, TableroCompleto, TipoTablero } from './catalogo';
+import { Acabado, Grosor, TipoTablero } from './catalogo';
 
 // Los id y las fechas los asigna el backend al guardar: faltan mientras el proyecto solo está
 // en el planificador.
@@ -38,7 +38,7 @@ export interface Optimizacion {
 
 // Los tableros de un mismo formato que usa una optimización.
 export interface DetalleOptimizacion {
-  tablero: TableroCompleto;
+  tableroId: number;
   cantidad: number;
   // Importe de todos los tableros del detalle, con el precio del momento del cálculo.
   precio: number;

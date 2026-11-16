@@ -47,9 +47,10 @@ export class Planificador {
         material.opcionElegida,
       );
       const tableros =
-        opciones.elegida?.detalles.flatMap((d) =>
-          d.unidades.map((unidad) => ({ formato: d.tablero.formato, unidad })),
-        ) ?? [];
+        opciones.elegida?.detalles.flatMap((d) => {
+          const { formato } = this.tableros().find((t) => t.id === d.tableroId)!;
+          return d.unidades.map((unidad) => ({ formato, unidad }));
+        }) ?? [];
       const visible = Math.max(0, Math.min(material.tableroVisible, tableros.length - 1));
       return { material, ...opciones, tableros, visible };
     }),

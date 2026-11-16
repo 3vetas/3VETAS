@@ -1,4 +1,4 @@
-import { Formato } from './catalogo';
+import { Formato, TableroCompleto } from './catalogo';
 import { Optimizacion, TableroProyecto, UnidadTableroOptimizacion } from './planificador';
 import { Persona } from './usuario';
 
@@ -94,6 +94,7 @@ export interface DatosPedido {
   personas: Persona[];
   proyectos: Proyecto[];
   optimizaciones: Optimizacion[];
+  tableros: TableroCompleto[];
 }
 
 export function completarPedido(pedido: Pedido, datos: DatosPedido): PedidoCompleto {
@@ -112,7 +113,7 @@ export function completarPedido(pedido: Pedido, datos: DatosPedido): PedidoCompl
         .flatMap((o) => o?.detalles ?? [])
         .flatMap((detalle) =>
           detalle.unidades.map((unidad) => ({
-            formato: detalle.tablero.formato,
+            formato: buscar(datos.tableros, detalle.tableroId).formato,
             unidad,
             cantidad: detalle.cantidad,
           })),

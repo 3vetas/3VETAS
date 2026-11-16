@@ -218,5 +218,6 @@ export const PEDIDOS: PedidoCompleto[] = datos.map(({ pedido }) =>
     personas: PERSONAS,
     proyectos: PROYECTOS,
     optimizaciones: OPTIMIZACIONES,
+    tableros,
   }),
 );

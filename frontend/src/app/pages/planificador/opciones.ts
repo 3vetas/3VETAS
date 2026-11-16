@@ -50,7 +50,7 @@ export function calcularOpciones(
       porcentajeAprovechamiento: (superficiePiezas / superficieTableros) * 100,
       costeEstimado: precio,
       seleccionada: false,
-      detalles: [{ tablero, cantidad, precio, unidades: colocacion.unidades }],
+      detalles: [{ tableroId: tablero.id, cantidad, precio, unidades: colocacion.unidades }],
     });
   }
 
