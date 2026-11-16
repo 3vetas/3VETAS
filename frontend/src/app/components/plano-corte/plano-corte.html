@@ -8,7 +8,7 @@
     'Tablero ' +
     tableroFisico.numeroTablero +
     ' con ' +
-    tableroFisico.distribucion.length +
+    tableroFisico.distribuciones.length +
     ' piezas'
   "
 >
@@ -21,12 +21,12 @@
     stroke-width="2"
     vector-effect="non-scaling-stroke"
   />
-  @for (colocada of tableroFisico.distribucion; track colocada.ordenDibujo) {
+  @for (colocada of tableroFisico.distribuciones; track colocada.ordenDibujo) {
     @let pieza = piezas()[colocada.indicePieza];
     <rect
       class="plano-corte__pieza"
-      [attr.x]="colocada.posicionXMm"
-      [attr.y]="colocada.posicionYMm"
+      [attr.x]="colocada.posicionXmm"
+      [attr.y]="colocada.posicionYmm"
       [attr.width]="colocada.anchoFinalMm"
       [attr.height]="colocada.altoFinalMm"
       [attr.fill]="color()"
@@ -41,8 +41,8 @@
     </rect>
     <!-- Este svg recorta el texto para que no se salga de la pieza. -->
     <svg
-      [attr.x]="colocada.posicionXMm"
-      [attr.y]="colocada.posicionYMm"
+      [attr.x]="colocada.posicionXmm"
+      [attr.y]="colocada.posicionYmm"
       [attr.width]="colocada.anchoFinalMm"
       [attr.height]="colocada.altoFinalMm"
     >

@@ -23,7 +23,7 @@ interface TableroAbierto {
   filas: Fila[];
   // Donde empieza el alto libre del tablero.
   y: number;
-  distribucion: DistribucionPieza[];
+  distribuciones: DistribucionPieza[];
 }
 
 // Coloca las piezas por filas, de izquierda a derecha y de arriba abajo:
@@ -52,12 +52,12 @@ export function colocarPorFilas(
   const tableros: TableroAbierto[] = [];
   for (const unidad of unidades) {
     const { tablero, fila } = buscarHueco(tableros, unidad, formato, grosorSierraMm);
-    tablero.distribucion.push({
+    tablero.distribuciones.push({
       indicePieza: unidad.indicePieza,
       numeroUnidad: unidad.numeroUnidad,
-      ordenDibujo: tablero.distribucion.length + 1,
-      posicionXMm: fila.x,
-      posicionYMm: fila.y,
+      ordenDibujo: tablero.distribuciones.length + 1,
+      posicionXmm: fila.x,
+      posicionYmm: fila.y,
       anchoFinalMm: unidad.ancho,
       altoFinalMm: unidad.alto,
       rotada: unidad.rotada,
@@ -67,7 +67,7 @@ export function colocarPorFilas(
 
   return {
     ok: true,
-    unidades: tableros.map((t, i) => ({ numeroTablero: i + 1, distribucion: t.distribucion })),
+    unidades: tableros.map((t, i) => ({ numeroTablero: i + 1, distribuciones: t.distribuciones })),
   };
 }
 
@@ -105,7 +105,7 @@ function buscarHueco(
 
   let tablero = tableros.find((t) => t.y + medidas.alto <= formato.altoMm);
   if (!tablero) {
-    tablero = { filas: [], y: 0, distribucion: [] };
+    tablero = { filas: [], y: 0, distribuciones: [] };
     tableros.push(tablero);
   }
   const fila = { y: tablero.y, x: 0 };

@@ -43,7 +43,7 @@ export interface DetalleOptimizacion {
 // Un tablero físico.
 export interface UnidadTableroOptimizacion {
   numeroTablero: number;
-  distribucion: DistribucionPieza[];
+  distribuciones: DistribucionPieza[];
 }
 
 export interface DistribucionPieza {
@@ -51,8 +51,8 @@ export interface DistribucionPieza {
   indicePieza: number;
   numeroUnidad: number;
   ordenDibujo: number;
-  posicionXMm: number;
-  posicionYMm: number;
+  posicionXmm: number;
+  posicionYmm: number;
   anchoFinalMm: number;
   altoFinalMm: number;
   rotada: boolean;

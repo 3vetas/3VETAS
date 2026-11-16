@@ -23,7 +23,7 @@ export interface Formato {
 
 export interface Grosor {
   id: number;
-  valorMm: number;
+  espesorMm: number;
 }
 
 export interface Tablero {

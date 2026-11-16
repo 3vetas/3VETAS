@@ -63,7 +63,7 @@ export class Admin {
   protected materiales(pedido: Pedido): string {
     return pedido.proyecto.tableros
       .map(
-        (t) => `${t.tipoTablero.nombre} ${t.acabado.nombre.toLowerCase()} ${t.grosor.valorMm} mm`,
+        (t) => `${t.tipoTablero.nombre} ${t.acabado.nombre.toLowerCase()} ${t.grosor.espesorMm} mm`,
       )
       .join(', ');
   }

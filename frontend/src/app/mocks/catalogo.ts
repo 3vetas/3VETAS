@@ -61,10 +61,10 @@ const f2750x1830: Formato = { id: 2, anchoMm: 2750, altoMm: 1830 };
 const f2800x2070: Formato = { id: 3, anchoMm: 2800, altoMm: 2070 };
 const f2500x1250: Formato = { id: 4, anchoMm: 2500, altoMm: 1250 };
 
-const g10: Grosor = { id: 1, valorMm: 10 };
-const g16: Grosor = { id: 2, valorMm: 16 };
-const g18: Grosor = { id: 3, valorMm: 18 };
-const g19: Grosor = { id: 4, valorMm: 19 };
+const g10: Grosor = { id: 1, espesorMm: 10 };
+const g16: Grosor = { id: 2, espesorMm: 16 };
+const g18: Grosor = { id: 3, espesorMm: 18 };
+const g19: Grosor = { id: 4, espesorMm: 19 };
 
 function tablero(
   id: number,
@@ -82,8 +82,8 @@ function tablero(
     acabado,
     formato,
     grosor,
-    referencia: `${prefijo}-${acabado.codFabricante}-${grosor.valorMm}-${formato.anchoMm}`,
-    descripcion: `${tipo.nombre} ${acabado.nombre.toLowerCase()} ${grosor.valorMm} mm`,
+    referencia: `${prefijo}-${acabado.codFabricante}-${grosor.espesorMm}-${formato.anchoMm}`,
+    descripcion: `${tipo.nombre} ${acabado.nombre.toLowerCase()} ${grosor.espesorMm} mm`,
     precioTablero,
     stockActual,
     activo: true,

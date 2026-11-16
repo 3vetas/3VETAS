@@ -28,7 +28,7 @@
         <option value="0" [selected]="grosorId() === 0">Todos</option>
         @for (grosor of grosores(); track grosor.id) {
           <option [value]="grosor.id" [selected]="grosor.id === grosorId()">
-            {{ grosor.valorMm }} mm
+            {{ grosor.espesorMm }} mm
           </option>
         }
       </select>
@@ -64,7 +64,7 @@
           <h3 class="tarjeta-tablero__nombre">{{ tablero.descripcion }}</h3>
           <p class="tarjeta-tablero__medidas">
             {{ tablero.formato.anchoMm }} × {{ tablero.formato.altoMm }} mm ·
-            {{ tablero.grosor.valorMm }} mm · {{ tablero.acabado.nombre }}
+            {{ tablero.grosor.espesorMm }} mm · {{ tablero.acabado.nombre }}
           </p>
           <p class="tarjeta-tablero__precio">{{ euros.format(tablero.precioTablero) }}</p>
           @if (tablero.stockActual > 0) {

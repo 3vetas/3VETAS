@@ -23,7 +23,7 @@
             }}
             ·
             {{
-              material.grosor.valorMm
+              material.grosor.espesorMm
             }}
             mm
           </caption>
@@ -69,7 +69,7 @@
       <section class="seccion material">
         <h2 class="seccion__titulo">
           {{ material.tipoTablero.nombre }} · {{ material.acabado.nombre }} ·
-          {{ material.grosor.valorMm }} mm
+          {{ material.grosor.espesorMm }} mm
         </h2>
 
         <h3 class="material__subtitulo">Distribución propuesta</h3>
@@ -263,7 +263,7 @@
         >
           @for (grosor of grosores(); track grosor.id) {
             <option [value]="grosor.id" [selected]="grosor.id === grosorId()">
-              {{ grosor.valorMm }} mm
+              {{ grosor.espesorMm }} mm
             </option>
           }
         </select>

@@ -35,7 +35,7 @@ describe('calcularOpciones', () => {
     expect(opcion.porcentajeAprovechamiento).toBeCloseTo(80.62);
     expect(opcion.detalles).toHaveLength(1);
     expect(opcion.detalles[0]).toMatchObject({ tablero: pequeno, cantidad: 1, precio: 35 });
-    expect(opcion.detalles[0].unidades[0].distribucion).toHaveLength(6);
+    expect(opcion.detalles[0].unidades[0].distribuciones).toHaveLength(6);
   });
 
   it('recomienda la opción más barata', () => {

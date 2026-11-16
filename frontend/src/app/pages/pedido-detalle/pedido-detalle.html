@@ -31,7 +31,7 @@
             @for (m of materiales(); track $index) {
               <span class="pedido__material">
                 {{ m.material.tipoTablero.nombre }} · {{ m.material.acabado.nombre }} ·
-                {{ m.material.grosor.valorMm }} mm
+                {{ m.material.grosor.espesorMm }} mm
               </span>
             }
           </dd>
@@ -83,7 +83,7 @@
     <section class="seccion despiece">
       <h2 class="seccion__titulo">
         {{ material.tipoTablero.nombre }} · {{ material.acabado.nombre }} ·
-        {{ material.grosor.valorMm }} mm
+        {{ material.grosor.espesorMm }} mm
       </h2>
       <table class="tabla despiece__tabla">
         <caption class="despiece__titulo">

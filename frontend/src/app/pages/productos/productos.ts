@@ -22,7 +22,7 @@ export class Productos {
   // Opciones de los desplegables, sacadas del propio catálogo. 0 significa «todos».
   protected readonly tipos = computed(() => sinRepetir(this.activos().map((t) => t.tipo)));
   protected readonly grosores = computed(() =>
-    sinRepetir(this.activos().map((t) => t.grosor)).sort((a, b) => a.valorMm - b.valorMm),
+    sinRepetir(this.activos().map((t) => t.grosor)).sort((a, b) => a.espesorMm - b.espesorMm),
   );
 
   protected readonly tipoId = signal(0);
