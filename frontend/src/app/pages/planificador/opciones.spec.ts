@@ -38,6 +38,13 @@ describe('calcularOpciones', () => {
     expect(opcion.detalles[0].unidades[0].distribuciones).toHaveLength(6);
   });
 
+  it('guarda en el detalle el importe de todos sus tableros', () => {
+    const enteros = [pieza('Entero', 2440, 1220, 3)];
+    const [opcion] = calcularOpciones(enteros, [pequeno], null).optimizaciones;
+
+    expect(opcion.detalles[0]).toMatchObject({ cantidad: 3, precio: 105 });
+  });
+
   it('recomienda la opción más barata', () => {
     const { optimizaciones, elegida } = calcularOpciones(laterales, [grande, pequeno], null);
 

@@ -35,7 +35,7 @@ export interface Optimizacion {
 export interface DetalleOptimizacion {
   tablero: Tablero;
   cantidad: number;
-  // Precio de cada tablero en el momento del cálculo.
+  // Importe de todos los tableros del detalle, con el precio del momento del cálculo.
   precio: number;
   unidades: UnidadTableroOptimizacion[];
 }

@@ -42,16 +42,15 @@ export function calcularOpciones(
     }
     const { anchoMm, altoMm } = tablero.formato;
     const superficieTableros = cantidad * anchoMm * altoMm;
+    const precio = cantidad * tablero.precioTablero;
     optimizaciones.push({
       nombreOpcion: `${anchoMm} × ${altoMm}`,
       superficieUtilizada: superficiePiezas,
       superficieDesperdiciada: superficieTableros - superficiePiezas,
       porcentajeAprovechamiento: (superficiePiezas / superficieTableros) * 100,
-      costeEstimado: cantidad * tablero.precioTablero,
+      costeEstimado: precio,
       seleccionada: false,
-      detalles: [
-        { tablero, cantidad, precio: tablero.precioTablero, unidades: colocacion.unidades },
-      ],
+      detalles: [{ tablero, cantidad, precio, unidades: colocacion.unidades }],
     });
   }
 
