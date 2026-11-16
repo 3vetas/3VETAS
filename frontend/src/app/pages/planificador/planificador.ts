@@ -122,6 +122,9 @@ export class Planificador {
     ),
   );
 
+  // Las piezas nuevas llevan un id provisional negativo hasta que el backend les ponga el suyo.
+  private idProvisional = -1;
+
   private readonly modal = viewChild.required<ElementRef<HTMLDialogElement>>('modal');
   private readonly piezaNueva = signal(piezaVacia());
   protected readonly piezaForm = form(
@@ -145,7 +148,7 @@ export class Planificador {
     {
       submission: {
         action: async () => {
-          this.anadirPieza(this.piezaNueva());
+          this.anadirPieza({ ...this.piezaNueva(), id: this.idProvisional-- });
           this.modal().nativeElement.close();
         },
       },
@@ -240,6 +243,6 @@ function enteroPositivo(campo: SchemaPath<number>, nombre: string): void {
 }
 
 // NaN deja vacíos los campos numéricos del formulario.
-function piezaVacia(): Pieza {
+function piezaVacia(): Omit<Pieza, 'id'> {
   return { descripcion: '', anchoMm: NaN, altoMm: NaN, cantidad: 1, rotacionPermitida: true };
 }

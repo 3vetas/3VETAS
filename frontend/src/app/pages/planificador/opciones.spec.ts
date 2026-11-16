@@ -23,8 +23,10 @@ function tablero(
   };
 }
 
+let ultimoId = 0;
+
 function pieza(descripcion: string, anchoMm: number, altoMm: number, cantidad = 1): Pieza {
-  return { descripcion, anchoMm, altoMm, cantidad, rotacionPermitida: true };
+  return { id: ++ultimoId, descripcion, anchoMm, altoMm, cantidad, rotacionPermitida: true };
 }
 
 const pequeno = tablero(1, 2440, 1220, 35);

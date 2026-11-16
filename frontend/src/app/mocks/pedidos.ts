@@ -80,7 +80,7 @@ function pieza(
   cantidad: number,
   rotacionPermitida = true,
 ): Pieza {
-  return { descripcion, anchoMm, altoMm, cantidad, rotacionPermitida };
+  return { id: nuevoId(), descripcion, anchoMm, altoMm, cantidad, rotacionPermitida };
 }
 
 function pedido(

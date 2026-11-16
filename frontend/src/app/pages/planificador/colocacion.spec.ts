@@ -5,6 +5,8 @@ import { colocarPorFilas } from './colocacion';
 const formato: Formato = { id: 1, anchoMm: 2440, altoMm: 1220 };
 const sierra = 4;
 
+let ultimoId = 0;
+
 function pieza(
   descripcion: string,
   anchoMm: number,
@@ -12,7 +14,7 @@ function pieza(
   cantidad = 1,
   rotacionPermitida = true,
 ): Pieza {
-  return { descripcion, anchoMm, altoMm, cantidad, rotacionPermitida };
+  return { id: ++ultimoId, descripcion, anchoMm, altoMm, cantidad, rotacionPermitida };
 }
 
 function colocar(piezas: Pieza[], en = formato): UnidadTableroOptimizacion[] {
@@ -110,17 +112,19 @@ describe('colocarPorFilas', () => {
   });
 
   it('numera las unidades de cada pieza, los tableros y el orden de dibujo', () => {
-    const unidades = colocar([pieza('A', 1200, 1200, 3), pieza('B', 500, 500, 2)]);
-    const numerosDe = (indicePieza: number) =>
+    const a = pieza('A', 1200, 1200, 3);
+    const b = pieza('B', 500, 500, 2);
+    const unidades = colocar([a, b]);
+    const numerosDe = (p: Pieza) =>
       unidades
         .flatMap((u) => u.distribuciones)
-        .filter((d) => d.indicePieza === indicePieza)
+        .filter((d) => d.piezaId === p.id)
         .map((d) => d.numeroUnidad)
         .sort();
 
     expect(unidades.map((u) => u.numeroTablero)).toEqual([1, 2]);
-    expect(numerosDe(0)).toEqual([1, 2, 3]);
-    expect(numerosDe(1)).toEqual([1, 2]);
+    expect(numerosDe(a)).toEqual([1, 2, 3]);
+    expect(numerosDe(b)).toEqual([1, 2]);
     for (const { distribuciones } of unidades) {
       expect(distribuciones.map((d) => d.ordenDibujo)).toEqual(distribuciones.map((_, i) => i + 1));
     }

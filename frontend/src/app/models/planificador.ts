@@ -13,6 +13,9 @@ export interface TableroProyecto {
 }
 
 export interface Pieza {
+  // Las distribuciones se refieren a la pieza por su id. Hasta que se guarda, el planificador
+  // le pone uno provisional negativo.
+  id: number;
   descripcion: string;
   anchoMm: number;
   altoMm: number;
@@ -52,8 +55,7 @@ export interface UnidadTableroOptimizacion {
 }
 
 export interface DistribucionPieza {
-  // Posición de la pieza en la lista de piezas de su material.
-  indicePieza: number;
+  piezaId: number;
   numeroUnidad: number;
   ordenDibujo: number;
   posicionXmm: number;

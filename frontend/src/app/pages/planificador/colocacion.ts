@@ -38,13 +38,13 @@ export function colocarPorFilas(
   grosorSierraMm = GROSOR_SIERRA_MM,
 ): Colocacion {
   const unidades = [];
-  for (const [indicePieza, pieza] of piezas.entries()) {
+  for (const pieza of piezas) {
     const medidas = orientar(pieza, formato);
     if (!medidas) {
       return { ok: false, error: `No cabe «${pieza.descripcion}»` };
     }
     for (let numeroUnidad = 1; numeroUnidad <= pieza.cantidad; numeroUnidad++) {
-      unidades.push({ indicePieza, numeroUnidad, ...medidas });
+      unidades.push({ piezaId: pieza.id, numeroUnidad, ...medidas });
     }
   }
   unidades.sort((a, b) => b.alto - a.alto || b.ancho - a.ancho);
@@ -53,7 +53,7 @@ export function colocarPorFilas(
   for (const unidad of unidades) {
     const { tablero, fila } = buscarHueco(tableros, unidad, formato, grosorSierraMm);
     tablero.distribuciones.push({
-      indicePieza: unidad.indicePieza,
+      piezaId: unidad.piezaId,
       numeroUnidad: unidad.numeroUnidad,
       ordenDibujo: tablero.distribuciones.length + 1,
       posicionXmm: fila.x,
@@ -71,14 +71,14 @@ export function colocarPorFilas(
   };
 }
 
-export function cabe(pieza: Pieza, formato: Formato): boolean {
+export function cabe(pieza: Omit<Pieza, 'id'>, formato: Formato): boolean {
   return orientar(pieza, formato) !== undefined;
 }
 
 // Si la pieza se puede girar, se tumba (lado largo a lo ancho) para que las filas sean más bajas,
 // y si así no cabe, se prueba girada. Si no se puede girar, su ancho va en el sentido del ancho
 // del tablero por la veta.
-function orientar(pieza: Pieza, formato: Formato): Medidas | undefined {
+function orientar(pieza: Omit<Pieza, 'id'>, formato: Formato): Medidas | undefined {
   const recta = { ancho: pieza.anchoMm, alto: pieza.altoMm, rotada: false };
   const girada = { ancho: pieza.altoMm, alto: pieza.anchoMm, rotada: true };
   let posibles = [recta];

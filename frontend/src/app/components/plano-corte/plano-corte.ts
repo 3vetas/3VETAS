@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 import { Formato } from '../../models/catalogo';
 import { DistribucionPieza, Pieza, UnidadTableroOptimizacion } from '../../models/planificador';
@@ -12,9 +12,11 @@ import { DistribucionPieza, Pieza, UnidadTableroOptimizacion } from '../../model
 export class PlanoCorte {
   readonly formato = input.required<Formato>();
   readonly unidad = input.required<UnidadTableroOptimizacion>();
-  // Piezas del material: la distribución las identifica por su posición en esta lista.
+  // Piezas del material: la distribución las identifica por su id.
   readonly piezas = input.required<Pieza[]>();
   readonly color = input.required<string>();
+
+  protected readonly piezasPorId = computed(() => new Map(this.piezas().map((p) => [p.id, p])));
 
   // Letra en mm para que la descripción y las medidas quepan dentro de la pieza dibujada.
   protected tamanoLetra(colocada: DistribucionPieza, pieza: Pieza): number {

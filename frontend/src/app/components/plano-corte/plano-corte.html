@@ -22,7 +22,7 @@
     vector-effect="non-scaling-stroke"
   />
   @for (colocada of tableroFisico.distribuciones; track colocada.ordenDibujo) {
-    @let pieza = piezas()[colocada.indicePieza];
+    @let pieza = piezasPorId().get(colocada.piezaId)!;
     <rect
       class="plano-corte__pieza"
       [attr.x]="colocada.posicionXmm"
