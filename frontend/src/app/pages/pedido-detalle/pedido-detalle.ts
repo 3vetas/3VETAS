@@ -18,23 +18,16 @@ export class PedidoDetalle {
   // Datos de prueba hasta que exista GET /api/pedidos/{id}.
   protected readonly pedido = computed(() => PEDIDOS.find((p) => p.id === Number(this.id())));
 
-  // Cada material del proyecto con la optimización que eligió el cliente.
-  protected readonly materiales = computed(() =>
-    (this.pedido()?.proyecto.tableros ?? []).map((material) => ({
-      material,
-      elegida: material.optimizaciones.find((o) => o.seleccionada),
-    })),
-  );
+  // Cada material del proyecto con los tableros de la optimización que compró el cliente.
+  protected readonly materiales = computed(() => this.pedido()?.materiales ?? []);
 
   protected readonly totalPiezas = computed(() =>
     this.materiales()
-      .flatMap((m) => m.material.piezas)
+      .flatMap((m) => m.piezas)
       .reduce((total, p) => total + p.cantidad, 0),
   );
   protected readonly totalTableros = computed(() =>
-    this.materiales()
-      .flatMap((m) => m.elegida?.detalles ?? [])
-      .reduce((total, d) => total + d.cantidad, 0),
+    this.materiales().reduce((total, m) => total + m.planos.length, 0),
   );
 
   // Comentario del último cambio de estado, por ejemplo el motivo de un rechazo.

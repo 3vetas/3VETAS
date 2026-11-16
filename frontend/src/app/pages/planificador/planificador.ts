@@ -18,7 +18,7 @@ import { cabe, GROSOR_SIERRA_MM } from './colocacion';
 import { calcularOpciones } from './opciones';
 
 // Un material del proyecto con sus piezas. Sus optimizaciones se calculan a partir de ellas.
-interface Material extends Omit<TableroProyecto, 'optimizaciones'> {
+interface Material extends TableroProyecto {
   // Opción que eligió el cliente, o null para usar la recomendada.
   opcionElegida: string | null;
   // Posición del tablero que se está viendo en la distribución.

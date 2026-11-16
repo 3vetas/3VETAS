@@ -1,14 +1,15 @@
 import { Acabado, Grosor, TableroCompleto, TipoTablero } from './catalogo';
 
-// Los id y las fechas de estas tablas los asigna el backend al guardar el proyecto.
+// Los id y las fechas los asigna el backend al guardar: faltan mientras el proyecto solo está
+// en el planificador.
 
-// Un material del proyecto (tipo, acabado y grosor) con sus piezas y sus optimizaciones.
+// Un material del proyecto (tipo, acabado y grosor) con sus piezas.
 export interface TableroProyecto {
+  id?: number;
   tipoTablero: TipoTablero;
   acabado: Acabado;
   grosor: Grosor;
   piezas: Pieza[];
-  optimizaciones: Optimizacion[];
 }
 
 export interface Pieza {
@@ -21,6 +22,9 @@ export interface Pieza {
 
 // Una opción para cortar las piezas de un material. Solo una por material está seleccionada.
 export interface Optimizacion {
+  id?: number;
+  // Material al que pertenece.
+  tableroProyectoId?: number;
   nombreOpcion: string;
   // Superficies en mm².
   superficieUtilizada: number;
@@ -28,6 +32,7 @@ export interface Optimizacion {
   porcentajeAprovechamiento: number;
   costeEstimado: number;
   seleccionada: boolean;
+  fechaCalculo?: string;
   detalles: DetalleOptimizacion[];
 }
 

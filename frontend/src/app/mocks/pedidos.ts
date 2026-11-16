@@ -1,5 +1,5 @@
-import { Pedido, PedidoCompleto, PedidoEstado, Proyecto } from '../models/pedido';
-import { Pieza, TableroProyecto } from '../models/planificador';
+import { completarPedido, Pedido, PedidoCompleto, PedidoEstado, Proyecto } from '../models/pedido';
+import { Optimizacion, Pieza, TableroProyecto } from '../models/planificador';
 import { Persona } from '../models/usuario';
 import { calcularOpciones } from '../pages/planificador/opciones';
 import { completarTableros } from '../services/catalogo';
@@ -12,6 +12,16 @@ export const ID_USUARIO_TALLER = 3;
 
 // Un cambio de estado sin los datos que pone el backend.
 type Cambio = Omit<PedidoEstado, 'id' | 'usuarioId'>;
+
+interface MaterialConOpciones {
+  material: TableroProyecto;
+  optimizaciones: Optimizacion[];
+}
+
+let ultimoId = 0;
+function nuevoId(): number {
+  return ++ultimoId;
+}
 
 const tableros = completarTableros({
   tableros: TABLEROS,
@@ -38,7 +48,7 @@ const otroCliente = PERSONAS[1];
 
 // Las optimizaciones se calculan con el mismo algoritmo que el planificador, como si el
 // cliente hubiera dejado la opción recomendada.
-function material(idTablero: number, piezas: Pieza[]): TableroProyecto {
+function material(idTablero: number, piezas: Pieza[]): MaterialConOpciones {
   const base = tableros.find((t) => t.id === idTablero)!;
   const candidatos = tableros.filter(
     (t) =>
@@ -46,12 +56,20 @@ function material(idTablero: number, piezas: Pieza[]): TableroProyecto {
       t.acabadoId === base.acabadoId &&
       t.grosorId === base.grosorId,
   );
+  const id = nuevoId();
   return {
-    tipoTablero: base.tipoTablero,
-    acabado: base.acabado,
-    grosor: base.grosor,
-    piezas,
-    optimizaciones: calcularOpciones(piezas, candidatos, null).optimizaciones,
+    material: {
+      id,
+      tipoTablero: base.tipoTablero,
+      acabado: base.acabado,
+      grosor: base.grosor,
+      piezas,
+    },
+    optimizaciones: calcularOpciones(piezas, candidatos, null).optimizaciones.map((o) => ({
+      ...o,
+      id: nuevoId(),
+      tableroProyectoId: id,
+    })),
   };
 }
 
@@ -70,12 +88,13 @@ function pedido(
   persona: Persona,
   nombre: string,
   descripcion: string,
-  tableros: TableroProyecto[],
+  materiales: MaterialConOpciones[],
   historial: Cambio[],
-): { pedido: Pedido; proyecto: Proyecto } {
-  const baseImponible = tableros
-    .flatMap((t) => t.optimizaciones.filter((o) => o.seleccionada))
-    .reduce((total, o) => total + o.costeEstimado, 0);
+): { pedido: Pedido; proyecto: Proyecto; optimizaciones: Optimizacion[] } {
+  const optimizaciones = materiales.flatMap((m) => m.optimizaciones);
+  // El cliente compra la opción elegida de cada material.
+  const compradas = optimizaciones.filter((o) => o.seleccionada);
+  const baseImponible = compradas.reduce((total, o) => total + o.costeEstimado, 0);
   const importeIva = Math.round(baseImponible * IVA * 100) / 100;
   const fechaPedido = historial[0].fechaEstado;
   const ultimoCambio = historial[historial.length - 1];
@@ -88,7 +107,7 @@ function pedido(
     estado: 'pedido',
     fechaCreacion: fechaPedido,
     fechaModificacion: fechaPedido,
-    tableros,
+    tableros: materiales.map((m) => m.material),
   };
   const pedido: Pedido = {
     id,
@@ -103,13 +122,18 @@ function pedido(
     importeFinal: baseImponible + importeIva,
     fechaPedido,
     fechaActualizacion: ultimoCambio.fechaEstado,
+    lineas: compradas.map((o, i) => ({
+      id: id * 10 + i + 1,
+      optimizacionId: o.id!,
+      importe: o.costeEstimado,
+    })),
     historialEstados: historial.map((cambio, i) => ({
       id: id * 10 + i + 1,
       usuarioId: ID_USUARIO_TALLER,
       ...cambio,
     })),
   };
-  return { pedido, proyecto };
+  return { pedido, proyecto, optimizaciones };
 }
 
 const datos = [
@@ -186,10 +210,13 @@ const datos = [
 ];
 
 export const PROYECTOS: Proyecto[] = datos.map((d) => d.proyecto);
+export const OPTIMIZACIONES: Optimizacion[] = datos.flatMap((d) => d.optimizaciones);
 
 // Reúne lo que el backend devuelve por separado. Cuando existan los endpoints lo hará un servicio.
-export const PEDIDOS: PedidoCompleto[] = datos.map(({ pedido }) => ({
-  ...pedido,
-  persona: PERSONAS.find((p) => p.id === pedido.personaId)!,
-  proyecto: PROYECTOS.find((p) => p.id === pedido.proyectoId)!,
-}));
+export const PEDIDOS: PedidoCompleto[] = datos.map(({ pedido }) =>
+  completarPedido(pedido, {
+    personas: PERSONAS,
+    proyectos: PROYECTOS,
+    optimizaciones: OPTIMIZACIONES,
+  }),
+);

@@ -47,10 +47,8 @@ export class Admin {
 
   // Tableros físicos de la opción elegida en cada material del pedido en revisión.
   protected readonly planos = computed(() =>
-    (this.seleccionado()?.proyecto.tableros ?? []).flatMap((material) =>
-      (material.optimizaciones.find((o) => o.seleccionada)?.detalles ?? []).flatMap((detalle) =>
-        detalle.unidades.map((unidad) => ({ material, formato: detalle.tablero.formato, unidad })),
-      ),
+    (this.seleccionado()?.materiales ?? []).flatMap((material) =>
+      material.planos.map((plano) => ({ material, ...plano })),
     ),
   );
 

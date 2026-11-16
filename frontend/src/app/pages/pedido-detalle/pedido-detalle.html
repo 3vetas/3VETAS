@@ -30,8 +30,7 @@
           <dd class="datos__valor">
             @for (m of materiales(); track $index) {
               <span class="pedido__material">
-                {{ m.material.tipoTablero.nombre }} · {{ m.material.acabado.nombre }} ·
-                {{ m.material.grosor.espesorMm }} mm
+                {{ m.tipoTablero.nombre }} · {{ m.acabado.nombre }} · {{ m.grosor.espesorMm }} mm
               </span>
             }
           </dd>
@@ -78,8 +77,7 @@
     </section>
   </div>
 
-  @for (m of materiales(); track $index) {
-    @let material = m.material;
+  @for (material of materiales(); track $index) {
     <section class="seccion despiece">
       <h2 class="seccion__titulo">
         {{ material.tipoTablero.nombre }} · {{ material.acabado.nombre }} ·
@@ -110,23 +108,21 @@
       </table>
 
       <h3 class="despiece__titulo">Plano de corte</h3>
-      @if (m.elegida; as opcion) {
+      @if (material.planos.length > 0) {
         <div class="despiece__planos">
-          @for (detalle of opcion.detalles; track detalle.tablero.id) {
-            @for (unidad of detalle.unidades; track unidad.numeroTablero) {
-              <figure class="despiece__plano">
-                <app-plano-corte
-                  [formato]="detalle.tablero.formato"
-                  [unidad]="unidad"
-                  [piezas]="material.piezas"
-                  [color]="material.acabado.colorBase"
-                />
-                <figcaption class="despiece__leyenda">
-                  Tablero {{ unidad.numeroTablero }} de {{ detalle.cantidad }} ·
-                  {{ detalle.tablero.formato.anchoMm }} × {{ detalle.tablero.formato.altoMm }} mm
-                </figcaption>
-              </figure>
-            }
+          @for (plano of material.planos; track $index) {
+            <figure class="despiece__plano">
+              <app-plano-corte
+                [formato]="plano.formato"
+                [unidad]="plano.unidad"
+                [piezas]="material.piezas"
+                [color]="material.acabado.colorBase"
+              />
+              <figcaption class="despiece__leyenda">
+                Tablero {{ plano.unidad.numeroTablero }} de {{ plano.cantidad }} ·
+                {{ plano.formato.anchoMm }} × {{ plano.formato.altoMm }} mm
+              </figcaption>
+            </figure>
           }
         </div>
       } @else {
