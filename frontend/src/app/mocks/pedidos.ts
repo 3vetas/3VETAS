@@ -2,9 +2,18 @@ import { CambioEstado, Pedido } from '../models/pedido';
 import { Pieza, TableroProyecto } from '../models/planificador';
 import { Persona } from '../models/usuario';
 import { calcularOpciones } from '../pages/planificador/opciones';
-import { TABLEROS } from './catalogo';
+import { completarTableros } from '../services/catalogo';
+import { ACABADOS, FORMATOS, GROSORES, TABLEROS, TIPOS_TABLERO } from './catalogo';
 
 const IVA = 0.21;
+
+const tableros = completarTableros({
+  tableros: TABLEROS,
+  tipos: TIPOS_TABLERO,
+  acabados: ACABADOS,
+  formatos: FORMATOS,
+  grosores: GROSORES,
+});
 
 // Cliente con la sesión iniciada mientras no haya login.
 export const CLIENTE: Persona = {
@@ -24,15 +33,15 @@ const otroCliente: Persona = {
 // Las optimizaciones se calculan con el mismo algoritmo que el planificador, como si el
 // cliente hubiera dejado la opción recomendada.
 function material(idTablero: number, piezas: Pieza[]): TableroProyecto {
-  const base = TABLEROS.find((t) => t.id === idTablero)!;
-  const candidatos = TABLEROS.filter(
+  const base = tableros.find((t) => t.id === idTablero)!;
+  const candidatos = tableros.filter(
     (t) =>
-      t.tipo.id === base.tipo.id &&
-      t.acabado.id === base.acabado.id &&
-      t.grosor.id === base.grosor.id,
+      t.tipoTableroId === base.tipoTableroId &&
+      t.acabadoId === base.acabadoId &&
+      t.grosorId === base.grosorId,
   );
   return {
-    tipoTablero: base.tipo,
+    tipoTablero: base.tipoTablero,
     acabado: base.acabado,
     grosor: base.grosor,
     piezas,

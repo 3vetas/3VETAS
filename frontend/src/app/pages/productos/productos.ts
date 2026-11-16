@@ -20,7 +20,7 @@ export class Productos {
   private readonly activos = computed(() => this.tableros().filter((t) => t.activo));
 
   // Opciones de los desplegables, sacadas del propio catálogo. 0 significa «todos».
-  protected readonly tipos = computed(() => sinRepetir(this.activos().map((t) => t.tipo)));
+  protected readonly tipos = computed(() => sinRepetir(this.activos().map((t) => t.tipoTablero)));
   protected readonly grosores = computed(() =>
     sinRepetir(this.activos().map((t) => t.grosor)).sort((a, b) => a.espesorMm - b.espesorMm),
   );
@@ -32,8 +32,8 @@ export class Productos {
   protected readonly filtrados = computed(() =>
     this.activos().filter(
       (t) =>
-        (this.tipoId() === 0 || t.tipo.id === this.tipoId()) &&
-        (this.grosorId() === 0 || t.grosor.id === this.grosorId()) &&
+        (this.tipoId() === 0 || t.tipoTableroId === this.tipoId()) &&
+        (this.grosorId() === 0 || t.grosorId === this.grosorId()) &&
         cumpleDisponibilidad(t, this.disponibilidad()),
     ),
   );

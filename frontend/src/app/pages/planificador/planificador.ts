@@ -11,7 +11,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, required, SchemaPath, validate } from '@angular/forms/signals';
 
 import { PlanoCorte } from '../../components/plano-corte/plano-corte';
-import { Tablero } from '../../models/catalogo';
+import { TableroCompleto } from '../../models/catalogo';
 import { Optimizacion, Pieza, TableroProyecto } from '../../models/planificador';
 import { Catalogo } from '../../services/catalogo';
 import { cabe, GROSOR_SIERRA_MM } from './colocacion';
@@ -90,13 +90,13 @@ export class Planificador {
   protected readonly grosorSierraMm = GROSOR_SIERRA_MM;
 
   // Desplegables encadenados del modal: al cambiar uno, los siguientes vuelven a su primera opción.
-  protected readonly tipos = computed(() => sinRepetir(this.tableros().map((t) => t.tipo)));
+  protected readonly tipos = computed(() => sinRepetir(this.tableros().map((t) => t.tipoTablero)));
   protected readonly tipoId = linkedSignal(() => this.tipos()[0]?.id);
 
   protected readonly acabados = computed(() =>
     sinRepetir(
       this.tableros()
-        .filter((t) => t.tipo.id === this.tipoId())
+        .filter((t) => t.tipoTableroId === this.tipoId())
         .map((t) => t.acabado),
     ),
   );
@@ -105,7 +105,7 @@ export class Planificador {
   protected readonly grosores = computed(() =>
     sinRepetir(
       this.tableros()
-        .filter((t) => t.tipo.id === this.tipoId() && t.acabado.id === this.acabadoId())
+        .filter((t) => t.tipoTableroId === this.tipoId() && t.acabadoId === this.acabadoId())
         .map((t) => t.grosor),
     ),
   );
@@ -115,9 +115,9 @@ export class Planificador {
   private readonly candidatos = computed(() =>
     this.tableros().filter(
       (t) =>
-        t.tipo.id === this.tipoId() &&
-        t.acabado.id === this.acabadoId() &&
-        t.grosor.id === this.grosorId(),
+        t.tipoTableroId === this.tipoId() &&
+        t.acabadoId === this.acabadoId() &&
+        t.grosorId === this.grosorId(),
     ),
   );
 
@@ -190,7 +190,7 @@ export class Planificador {
       this.materiales.update((materiales) => [
         ...materiales,
         {
-          tipoTablero: tablero.tipo,
+          tipoTablero: tablero.tipoTablero,
           acabado: tablero.acabado,
           grosor: tablero.grosor,
           piezas: [pieza],
@@ -210,11 +210,11 @@ export class Planificador {
   }
 }
 
-function esDelMaterial(tablero: Tablero, material: Material): boolean {
+function esDelMaterial(tablero: TableroCompleto, material: Material): boolean {
   return (
-    tablero.tipo.id === material.tipoTablero.id &&
-    tablero.acabado.id === material.acabado.id &&
-    tablero.grosor.id === material.grosor.id
+    tablero.tipoTableroId === material.tipoTablero.id &&
+    tablero.acabadoId === material.acabado.id &&
+    tablero.grosorId === material.grosor.id
   );
 }
 

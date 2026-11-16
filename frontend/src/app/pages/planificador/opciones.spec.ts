@@ -1,5 +1,5 @@
-import { TABLEROS } from '../../mocks/catalogo';
-import { Tablero } from '../../models/catalogo';
+import { ACABADOS, GROSORES, TABLEROS, TIPOS_TABLERO } from '../../mocks/catalogo';
+import { TableroCompleto } from '../../models/catalogo';
 import { Pieza } from '../../models/planificador';
 import { calcularOpciones } from './opciones';
 
@@ -9,8 +9,18 @@ function tablero(
   altoMm: number,
   precioTablero: number,
   stockActual = 10,
-): Tablero {
-  return { ...TABLEROS[0], id, formato: { id, anchoMm, altoMm }, precioTablero, stockActual };
+): TableroCompleto {
+  return {
+    ...TABLEROS[0],
+    id,
+    formatoId: id,
+    tipoTablero: TIPOS_TABLERO[0],
+    acabado: ACABADOS[0],
+    formato: { id, anchoMm, altoMm },
+    grosor: GROSORES[0],
+    precioTablero,
+    stockActual,
+  };
 }
 
 function pieza(descripcion: string, anchoMm: number, altoMm: number, cantidad = 1): Pieza {

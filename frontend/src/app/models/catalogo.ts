@@ -26,15 +26,24 @@ export interface Grosor {
   espesorMm: number;
 }
 
+// El backend devuelve el tablero solo con los id de sus características.
 export interface Tablero {
   id: number;
-  tipo: TipoTablero;
-  acabado: Acabado;
-  formato: Formato;
-  grosor: Grosor;
+  tipoTableroId: number;
+  acabadoId: number;
+  formatoId: number;
+  grosorId: number;
   referencia: string;
   descripcion: string;
   precioTablero: number;
   stockActual: number;
   activo: boolean;
+}
+
+// El servicio del catálogo añade las características para que las páginas no tengan que buscarlas.
+export interface TableroCompleto extends Tablero {
+  tipoTablero: TipoTablero;
+  acabado: Acabado;
+  formato: Formato;
+  grosor: Grosor;
 }

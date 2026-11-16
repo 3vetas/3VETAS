@@ -18,6 +18,7 @@ const contrachapado: TipoTablero = {
   descripcion: 'Chapas de madera encoladas en capas cruzadas.',
   imagen: '',
 };
+export const TIPOS_TABLERO: TipoTablero[] = [melamina, mdf, contrachapado];
 
 const blanco: Acabado = {
   id: 1,
@@ -55,16 +56,19 @@ const abedul: Acabado = {
   fabricante: 'Genérico',
   codFabricante: 'M-305',
 };
+export const ACABADOS: Acabado[] = [blanco, roble, crudo, abedul];
 
 const f2440x1220: Formato = { id: 1, anchoMm: 2440, altoMm: 1220 };
 const f2750x1830: Formato = { id: 2, anchoMm: 2750, altoMm: 1830 };
 const f2800x2070: Formato = { id: 3, anchoMm: 2800, altoMm: 2070 };
 const f2500x1250: Formato = { id: 4, anchoMm: 2500, altoMm: 1250 };
+export const FORMATOS: Formato[] = [f2440x1220, f2750x1830, f2800x2070, f2500x1250];
 
 const g10: Grosor = { id: 1, espesorMm: 10 };
 const g16: Grosor = { id: 2, espesorMm: 16 };
 const g18: Grosor = { id: 3, espesorMm: 18 };
 const g19: Grosor = { id: 4, espesorMm: 19 };
+export const GROSORES: Grosor[] = [g10, g16, g18, g19];
 
 function tablero(
   id: number,
@@ -78,10 +82,10 @@ function tablero(
   const prefijo = tipo.nombre.slice(0, 3).toUpperCase();
   return {
     id,
-    tipo,
-    acabado,
-    formato,
-    grosor,
+    tipoTableroId: tipo.id,
+    acabadoId: acabado.id,
+    formatoId: formato.id,
+    grosorId: grosor.id,
     referencia: `${prefijo}-${acabado.codFabricante}-${grosor.espesorMm}-${formato.anchoMm}`,
     descripcion: `${tipo.nombre} ${acabado.nombre.toLowerCase()} ${grosor.espesorMm} mm`,
     precioTablero,

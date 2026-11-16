@@ -1,9 +1,9 @@
-import { Tablero } from '../../models/catalogo';
+import { TableroCompleto } from '../../models/catalogo';
 import { Optimizacion, Pieza } from '../../models/planificador';
 import { colocarPorFilas } from './colocacion';
 
 export interface FormatoDescartado {
-  tablero: Tablero;
+  tablero: TableroCompleto;
   motivo: string;
 }
 
@@ -18,7 +18,7 @@ export interface Opciones {
 // Coloca las piezas en cada tablero del material, es decir, en cada formato, y compara el resultado.
 export function calcularOpciones(
   piezas: Pieza[],
-  tableros: Tablero[],
+  tableros: TableroCompleto[],
   opcionElegida: string | null,
 ): Opciones {
   const superficiePiezas = piezas.reduce(
