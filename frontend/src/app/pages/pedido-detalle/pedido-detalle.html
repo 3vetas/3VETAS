@@ -61,7 +61,7 @@
     <section class="seccion pedido__historial">
       <h2 class="seccion__titulo">Historial de estados</h2>
       <ol class="historial-estados">
-        @for (cambio of pedido.historial; track $index) {
+        @for (cambio of pedido.historialEstados; track $index) {
           <li class="historial-estados__cambio">
             <span [class]="'estado estado--' + cambio.estado">
               {{ nombresEstado[cambio.estado] }}

@@ -38,7 +38,9 @@ export class PedidoDetalle {
   );
 
   // Comentario del último cambio de estado, por ejemplo el motivo de un rechazo.
-  protected readonly motivo = computed(() => this.pedido()?.historial.at(-1)?.comentario ?? '');
+  protected readonly motivo = computed(
+    () => this.pedido()?.historialEstados.at(-1)?.comentario ?? '',
+  );
 
   protected readonly nombresEstado = NOMBRES_ESTADO;
   protected readonly numeroPedido = numeroPedido;

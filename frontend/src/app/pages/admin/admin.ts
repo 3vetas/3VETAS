@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
 import { PlanoCorte } from '../../components/plano-corte/plano-corte';
-import { PEDIDOS } from '../../mocks/pedidos';
+import { ID_USUARIO_TALLER, PEDIDOS } from '../../mocks/pedidos';
 import { USUARIOS } from '../../mocks/usuarios';
 import { EstadoPedido, NOMBRES_ESTADO, numeroPedido, Pedido } from '../../models/pedido';
 import { Catalogo } from '../../services/catalogo';
@@ -87,9 +87,16 @@ export class Admin {
           ? {
               ...p,
               estado,
-              historial: [
-                ...p.historial,
-                { estado, comentario, fechaEstado: new Date().toISOString() },
+              historialEstados: [
+                ...p.historialEstados,
+                {
+                  // Id provisional: el definitivo lo pondrá el backend.
+                  id: -(p.historialEstados.length + 1),
+                  estado,
+                  comentario,
+                  usuarioId: ID_USUARIO_TALLER,
+                  fechaEstado: new Date().toISOString(),
+                },
               ],
             }
           : p,

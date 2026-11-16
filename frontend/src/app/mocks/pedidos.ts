@@ -1,4 +1,4 @@
-import { CambioEstado, Pedido } from '../models/pedido';
+import { Pedido, PedidoEstado } from '../models/pedido';
 import { Pieza, TableroProyecto } from '../models/planificador';
 import { Persona } from '../models/usuario';
 import { calcularOpciones } from '../pages/planificador/opciones';
@@ -6,6 +6,12 @@ import { completarTableros } from '../services/catalogo';
 import { ACABADOS, FORMATOS, GROSORES, TABLEROS, TIPOS_TABLERO } from './catalogo';
 
 const IVA = 0.21;
+
+// Usuario del taller con la sesión iniciada mientras no haya login.
+export const ID_USUARIO_TALLER = 3;
+
+// Un cambio de estado sin los datos que pone el backend.
+type Cambio = Omit<PedidoEstado, 'id' | 'usuarioId'>;
 
 const tableros = completarTableros({
   tableros: TABLEROS,
@@ -65,7 +71,7 @@ function pedido(
   nombre: string,
   descripcion: string,
   tableros: TableroProyecto[],
-  historial: CambioEstado[],
+  historial: Cambio[],
 ): Pedido {
   const baseImponible = tableros
     .flatMap((t) => t.optimizaciones.filter((o) => o.seleccionada))
@@ -81,7 +87,11 @@ function pedido(
     importeIva,
     importeFinal: baseImponible + importeIva,
     fechaPedido: historial[0].fechaEstado,
-    historial,
+    historialEstados: historial.map((cambio, i) => ({
+      id: id * 10 + i + 1,
+      usuarioId: ID_USUARIO_TALLER,
+      ...cambio,
+    })),
   };
 }
 

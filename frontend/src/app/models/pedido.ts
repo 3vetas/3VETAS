@@ -28,9 +28,12 @@ export interface Proyecto {
 }
 
 // Una fila de PEDIDO_ESTADOS: cada cambio de estado queda en el historial.
-export interface CambioEstado {
+export interface PedidoEstado {
+  id: number;
   estado: EstadoPedido;
   comentario: string;
+  // Usuario que hizo el cambio.
+  usuarioId: number;
   fechaEstado: string;
 }
 
@@ -44,7 +47,7 @@ export interface Pedido {
   importeIva: number;
   importeFinal: number;
   fechaPedido: string;
-  historial: CambioEstado[];
+  historialEstados: PedidoEstado[];
 }
 
 // Número que ve el cliente, por ejemplo #0007.
