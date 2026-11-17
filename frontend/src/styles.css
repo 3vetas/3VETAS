@@ -52,6 +52,7 @@
 }
 html {
   font-size: 16px;
+  line-height: 1.5;
 }
 
 body {
@@ -134,18 +135,17 @@ body {
   margin-bottom: 2rem;
 }
 
+/*Tarjetas*/
 .tarjeta {
   background: white;
-  border: 3px solid  rgb(138 150 75 / 20%);
+  border: 2px solid  rgb(138 150 75 / 20%);
   padding: 1.5rem;
   border-radius: 0.5rem;
 }
 
 .tarjeta__titulo {
   font-family: var(--fuente-tecnica);
-  color: var(--color-oliva);
   font-size: 1rem;
-  border-left: 4px solid var(--color-mostaza);
   padding-left: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -154,3 +154,14 @@ body {
   line-height: 1.6;
 }
 
+.tarjeta--contraste {
+  background: var(--color-oliva);
+  color: var(--color-blanco);
+  border-color: var(--color-oliva);
+}
+
+.tarjeta--mostaza {
+  background: var(--color-mostaza);
+  color: var(--color-blanco);
+  border-color: var(--color-mostaza);
+}

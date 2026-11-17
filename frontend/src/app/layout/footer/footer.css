@@ -43,8 +43,7 @@
 
 .pie__servicios h3,
 .pie__contacto h3,
-.pie__horario h3,
-.pie__inferior {
+.pie__horario h3{
   font-family: var(--fuente-tecnica);
   text-transform: uppercase;
   font-size: 1rem;
@@ -53,4 +52,9 @@
 
 .pie__contacto address{
   font-style: normal;
+}
+
+.pie__inferior{
+  font-family: var(--fuente-tecnica);
+  font-size: 12px;
 }

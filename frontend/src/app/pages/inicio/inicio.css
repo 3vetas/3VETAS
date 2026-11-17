@@ -1,8 +1,7 @@
 .portada {
   margin: 0;
-  background: rgb(138 150 75 / 12%);
-
-  padding: 5rem 2rem;
+  background: rgb(138 150 75 / 25%);
+  padding: 5rem 4rem;
   margin-inline: -1.5rem;
   margin-top: -1.5rem;
 }
@@ -25,8 +24,31 @@
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2.5rem;
+}
+
+.pasos__numero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 3.5rem;
+  height: 3.5rem;
+
+  background-color: white;
+  border: 2px solid rgb(181 121 25 / 50%);
+  border-radius: 0.35rem;
+
+  font-family: var(--fuente-tecnica);
+  font-weight: 700;
+  font-size: 1.1rem;
+
+  color: var(--color-mostaza);
+}
+
+.pasos__paso:nth-child(even) {
+  background-color: rgba(0, 0, 0, 6%);
 }
 
 .taller__datos {
