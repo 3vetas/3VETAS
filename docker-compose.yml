@@ -1,0 +1,74 @@
+# Docker para probar el backend en local (MySQL + API + phpMyAdmin).
+#
+# Arrancar:  docker compose up --build
+# Parar:     docker compose down
+# Borrar tambien la base de datos (para que Flyway la cree de cero): docker compose down -v
+#
+# Cuando arranque:
+#   - Swagger:     http://localhost:8080/api/swagger-ui/index.html  (usuario admin / admin)
+#   - Health:      http://localhost:8080/api/system/health
+#   - phpMyAdmin:  http://localhost:8081
+#
+# Las contraseñas son solo para probar en local, no son las de produccion.
+
+services:
+
+  # Base de datos
+  mysql:
+    image: mysql:8.4
+    container_name: tresvetas-mysql
+    # En Linux MySQL distingue mayusculas en los nombres de tabla. Las migraciones crean ACABADOS
+    # y Hibernate busca acabados, asi que guardamos los nombres en minusculas como hace en Windows.
+    # OJO: solo funciona al crear la base de datos. Si ya existe, hacer antes: docker compose down -v
+    command: --lower-case-table-names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: 3vetas
+      MYSQL_USER: tresvetas
+      MYSQL_PASSWORD: tresvetas
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # Comprueba que MySQL ya acepta conexiones, para que el backend espere
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # API de Spring Boot (carpeta backend)
+  backend:
+    build: ./backend
+    container_name: tresvetas-backend
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/3vetas?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true&allowPublicKeyRetrieval=true
+      DB_USERNAME: tresvetas
+      DB_PASSWORD: tresvetas
+      # El frontend de Angular va en el puerto 4200
+      CORS_ALLOWED_ORIGINS: http://localhost:4200
+      FRONTEND_URL: http://localhost:4200
+      # Usuario para entrar en Swagger mientras no este hecho el login con JWT
+      SPRING_SECURITY_USER_NAME: admin
+      SPRING_SECURITY_USER_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # Para ver las tablas que crea Flyway
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: tresvetas-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:

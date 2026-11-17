@@ -1,0 +1,4 @@
+# No copiar a la imagen lo que se genera al compilar en local
+target/
+.idea/
+.vscode/
