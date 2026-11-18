@@ -28,11 +28,20 @@
 
 .filtros {
   padding: 1.5rem;
-
+  
   border: 1px solid rgb(138 150 75 / 20%);
-
-
+  border-radius: 0.5rem;
 }
+
+.filtros .seccion__titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+
+  color: var(--color-teja);
+}
+
 
 .filtros__formulario {
   display: flex;
@@ -40,6 +49,54 @@
   gap: 1rem;
 }
 
+.filtros .campo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filtros .campo__etiqueta {
+  font-family: var(--fuente-tecnica);
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color: var(--color-texto);
+}
+
+.filtros .campo__control {
+  padding: 0.9rem 1rem;
+
+  font-family: var(--fuente-principal);
+  font-size: 1rem;
+
+  border: 1px solid rgb(138 150 75 / 35%);
+  border-radius: 0.4rem;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.filtros .campo__control:focus {
+  outline: none;
+
+  border-color: var(--color-oliva);
+
+  box-shadow: 0 0 0 3px rgb(138 150 75 / 15%);
+}
+
+
+.filtros .boton--secundario {
+  align-self: flex-end;
+
+  margin-top: 0.5rem;
+}
 
 /* ==========================================================
    CATÁLOGO
