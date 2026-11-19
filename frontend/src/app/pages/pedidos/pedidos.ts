@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { CLIENTE, PEDIDOS } from '../../mocks/pedidos';
-import { NOMBRES_ESTADO, numeroPedido } from '../../models/pedido';
+import { NOMBRES_ESTADO, numeroPedido, PedidoCompleto } from '../../models/pedido';
+import { PedidosService } from '../../services/pedidos';
 
 @Component({
   imports: [RouterLink],
@@ -10,16 +10,23 @@ import { NOMBRES_ESTADO, numeroPedido } from '../../models/pedido';
   styleUrl: './pedidos.css',
   templateUrl: './pedidos.html',
 })
-export class Pedidos {
-  // Datos de prueba hasta que exista GET /api/pedidos/mis-pedidos. Del más reciente al más antiguo.
-  protected readonly pedidos = PEDIDOS.filter((p) => p.personaId === CLIENTE.id).sort((a, b) =>
-    b.fechaPedido.localeCompare(a.fechaPedido),
-  );
+export class Pedidos implements OnInit {
+  private readonly pedidosService = inject(PedidosService);
+
+  protected readonly pedidos = signal<PedidoCompleto[]>([]);
 
   protected readonly nombresEstado = NOMBRES_ESTADO;
   protected readonly numeroPedido = numeroPedido;
   protected readonly euros = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
   private readonly formatoFecha = new Intl.DateTimeFormat('es-ES', { dateStyle: 'short' });
+
+  ngOnInit(): void {
+    this.pedidosService.obtenerMisPedidos().subscribe((pedidos) => {
+      // Del más reciente al más antiguo.
+      pedidos.sort((a, b) => b.fechaPedido.localeCompare(a.fechaPedido));
+      this.pedidos.set(pedidos);
+    });
+  }
 
   protected fecha(iso: string): string {
     return this.formatoFecha.format(new Date(iso));

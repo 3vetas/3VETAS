@@ -1,9 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PlanoCorte } from '../../components/plano-corte/plano-corte';
-import { PEDIDOS } from '../../mocks/pedidos';
-import { NOMBRES_ESTADO, numeroPedido } from '../../models/pedido';
+import { NOMBRES_ESTADO, numeroPedido, PedidoCompleto } from '../../models/pedido';
+import { PedidosService } from '../../services/pedidos';
 
 @Component({
   imports: [PlanoCorte, RouterLink],
@@ -11,12 +11,20 @@ import { NOMBRES_ESTADO, numeroPedido } from '../../models/pedido';
   styleUrl: './pedido-detalle.css',
   templateUrl: './pedido-detalle.html',
 })
-export class PedidoDetalle {
+export class PedidoDetalle implements OnInit {
+  private readonly pedidosService = inject(PedidosService);
+
   // El :id de la ruta.
   readonly id = input.required<string>();
 
-  // Datos de prueba hasta que exista GET /api/pedidos/{id}.
-  protected readonly pedido = computed(() => PEDIDOS.find((p) => p.id === Number(this.id())));
+  // Se queda vacío si no existe ningún pedido con ese id.
+  protected readonly pedido = signal<PedidoCompleto | undefined>(undefined);
+
+  ngOnInit(): void {
+    this.pedidosService.obtenerPedido(Number(this.id())).subscribe((pedido) => {
+      this.pedido.set(pedido);
+    });
+  }
 
   // Cada material del proyecto con los tableros de la optimización que compró el cliente.
   protected readonly materiales = computed(() => this.pedido()?.materiales ?? []);

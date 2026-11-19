@@ -1,12 +1,13 @@
-import { Component, computed, inject, linkedSignal, signal } from '@angular/core';
+import { Component, computed, inject, linkedSignal, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
 import { PlanoCorte } from '../../components/plano-corte/plano-corte';
-import { ID_USUARIO_TALLER, PEDIDOS } from '../../mocks/pedidos';
-import { USUARIOS } from '../../mocks/usuarios';
+import { ID_USUARIO_TALLER } from '../../mocks/pedidos';
 import { EstadoPedido, NOMBRES_ESTADO, numeroPedido, PedidoCompleto } from '../../models/pedido';
 import { Catalogo } from '../../services/catalogo';
+import { PedidosService } from '../../services/pedidos';
+import { UsuariosService } from '../../services/usuarios';
 
 @Component({
   imports: [PlanoCorte, RouterLink],
@@ -14,11 +15,15 @@ import { Catalogo } from '../../services/catalogo';
   styleUrl: './admin.css',
   templateUrl: './admin.html',
 })
-export class Admin {
-  // Datos de prueba hasta que existan GET /api/pedidos y PATCH /api/pedidos/{id}/estado.
-  // Los cambios de estado solo se guardan en la página.
-  protected readonly pedidos = signal(PEDIDOS);
-  protected readonly usuarios = USUARIOS;
+export class Admin implements OnInit {
+  private readonly pedidosService = inject(PedidosService);
+
+  // Los cambios de estado solo se guardan en la página hasta que exista
+  // PATCH /api/pedidos/{id}/estado.
+  protected readonly pedidos = signal<PedidoCompleto[]>([]);
+  protected readonly usuarios = toSignal(inject(UsuariosService).obtenerUsuarios(), {
+    initialValue: [],
+  });
   protected readonly tableros = toSignal(inject(Catalogo).obtenerTableros(), { initialValue: [] });
 
   protected readonly estados = Object.keys(NOMBRES_ESTADO) as EstadoPedido[];
@@ -39,8 +44,8 @@ export class Admin {
     );
   });
 
-  // Pedido en revisión: al principio, el primero pendiente.
-  protected readonly seleccionadoId = signal(PEDIDOS.find((p) => p.estado === 'pendiente')?.id);
+  // Pedido en revisión: al cargar la página, el primero pendiente.
+  protected readonly seleccionadoId = signal<number | undefined>(undefined);
   protected readonly seleccionado = computed(() =>
     this.pedidos().find((p) => p.id === this.seleccionadoId()),
   );
@@ -57,6 +62,20 @@ export class Admin {
     () => this.seleccionado()?.estado ?? 'pendiente',
   );
   protected readonly motivo = linkedSignal({ source: this.seleccionadoId, computation: () => '' });
+
+  ngOnInit(): void {
+    this.pedidosService.obtenerPedidos().subscribe((pedidos) => {
+      this.pedidos.set(pedidos);
+
+      // Selecciona el primer pedido pendiente.
+      for (const pedido of pedidos) {
+        if (pedido.estado === 'pendiente') {
+          this.seleccionadoId.set(pedido.id);
+          break;
+        }
+      }
+    });
+  }
 
   protected materiales(pedido: PedidoCompleto): string {
     return pedido.materiales

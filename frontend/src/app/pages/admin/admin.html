@@ -262,7 +262,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (usuario of usuarios; track usuario.email) {
+          @for (usuario of usuarios(); track usuario.email) {
             <tr>
               <td>{{ usuario.persona.nombre }} {{ usuario.persona.apellidos }}</td>
               <td>{{ usuario.email }}</td>

@@ -2,7 +2,7 @@
 
 <section class="seccion historial">
   <h2 class="seccion__titulo">Historial de pedidos</h2>
-  @if (pedidos.length > 0) {
+  @if (pedidos().length > 0) {
     <table class="tabla historial__tabla">
       <thead>
         <tr>
@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (pedido of pedidos; track pedido.id) {
+        @for (pedido of pedidos(); track pedido.id) {
           <tr>
             <td>{{ numeroPedido(pedido) }}</td>
             <td>{{ fecha(pedido.fechaPedido) }}</td>
