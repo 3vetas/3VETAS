@@ -39,7 +39,7 @@
   margin-top: 0;
   margin-bottom: 1.5rem;
 
-  color: var(--color-teja);
+  color: var(--color-oliva);
 }
 
 
@@ -102,7 +102,16 @@
    CATÁLOGO
    ========================================================== */
 
-.catalogo {
+.catalogo{
+  margin-top: 0;
+}   
+.catalogo .seccion__titulo{
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+
+  color: var(--color-oliva);
 }
 
 .catalogo__lista {
@@ -162,24 +171,78 @@
    ========================================================== */
 
 .tarjeta-tablero {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  overflow: hidden;
+
+  background: var(--color-blanco);
+
+  border: 1px solid rgb(138 150 75 / 15%);
+  border-radius: 0.5rem;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.tarjeta-tablero:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 12px rgb(0 0 0 / 8%);
 }
 
 .tarjeta-tablero__imagen {
+  height: 220px;
+
+  border-bottom: 1px solid rgb(138 150 75 / 15%);
 }
 
 .tarjeta-tablero__nombre {
+  margin: 1.5rem 1.5rem 0.5rem;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  color: var(--color-texto);
 }
 
 .tarjeta-tablero__medidas {
+  margin: 0 1.5rem;
+
+  color: var(--color-gris);
+
+  font-family: var(--fuente-tecnica);
+
+  font-size: 0.9rem;
 }
 
 .tarjeta-tablero__precio {
+  margin: auto 1.5rem 0.75rem;
+
+  color: var(--color-teja);
+
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .tarjeta-tablero__estado {
+  margin: 0 1.5rem 1.25rem;
+
+  color: var(--color-oliva);
+
+  font-weight: 600;
 }
 
 .tarjeta-tablero__estado--sin-stock {
+  color: var(--color-teja);
+}
+
+.tarjeta-tablero .boton {
+  margin: 0 1.5rem 1.5rem;
 }
 
 
@@ -190,17 +253,37 @@
 .paginacion {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
 
-  margin-top: 2rem;
+  gap: 0.75rem;
+
+  margin-top: 3rem;
+  padding-top: 2rem;
+
+  border-top: 1px solid rgb(138 150 75 / 15%);
 }
 
 .paginacion__boton {
+  min-width: 3rem;
+  border-radius: 0.25rem;
 }
 
 .paginacion__numero {
+  min-width: 44px;
 }
 
 .paginacion__numero--actual {
+  background-color: var(--color-oliva);
+  border-color: var(--color-oliva);
+
+  color: var(--color-blanco);
+
+  font-weight: 700;
+}
+
+.paginacion__boton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
