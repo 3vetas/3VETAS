@@ -36,8 +36,7 @@ spring.flyway.clean-disabled=true
 # SECURITY - JWT
 # ============================================================
 
-app.security.jwt.private-key=${JWT_PRIVATE_KEY_PATH}
-app.security.jwt.public-key=${JWT_PUBLIC_KEY_PATH}
+app.security.jwt.secret=${JWT_SECRET}
 app.security.jwt.issuer=3vetas-api
 app.security.jwt.access-token-expiration=900
 

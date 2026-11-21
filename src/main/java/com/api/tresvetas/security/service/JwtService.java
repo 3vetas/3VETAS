@@ -1,60 +1,59 @@
 package com.api.tresvetas.security.service;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.OctetSequenceKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
-
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-
+/**
+ *
+ *
+ * @author Jabier Zurro Aduriz
+ */
 @Service
 public class JwtService {
 
     private final JwtEncoder jwtEncoder;
-    private final RSAPublicKey publicKey;
+    private final SecretKey secretKey;
     private final String issuer;
     private final long expiration;
 
     public JwtService(
-            @Value("${app.security.jwt.private-key}") String privateKeyPath,
-            @Value("${app.security.jwt.public-key}") String publicKeyPath,
+            @Value("${app.security.jwt.secret}") String secret,
             @Value("${app.security.jwt.issuer}") String issuer,
             @Value("${app.security.jwt.access-token-expiration}") long expiration
-    ) throws Exception {
+    ) {
+        byte[] keyBytes = Base64.getDecoder().decode(secret);
 
-        RSAPrivateKey privateKey = (RSAPrivateKey) loadPrivateKey(privateKeyPath);
-        this.publicKey = (RSAPublicKey) loadPublicKey(publicKeyPath);
+        if (keyBytes.length < 32) {
+            throw new IllegalArgumentException(
+                    "La clave JWT debe tener al menos 256 bits."
+            );
+        }
 
-        RSAKey rsaKey = new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
+        this.secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
+
+        OctetSequenceKey jwk = new OctetSequenceKey.Builder(keyBytes)
                 .build();
 
         this.jwtEncoder = new NimbusJwtEncoder(
-                new ImmutableJWKSet<>(new JWKSet(rsaKey))
+                new ImmutableJWKSet<>(new JWKSet(jwk))
         );
 
         this.issuer = issuer;
@@ -74,9 +73,7 @@ public class JwtService {
 
         return jwtEncoder.encode(
                 JwtEncoderParameters.from(
-                        org.springframework.security.oauth2.jwt.JwsHeader
-                                .with(SignatureAlgorithm.RS256)
-                                .build(),
+                        JwsHeader.with(MacAlgorithm.HS256).build(),
                         claims
                 )
         ).getTokenValue();
@@ -85,8 +82,8 @@ public class JwtService {
     @Bean
     public JwtDecoder jwtDecoder() {
         NimbusJwtDecoder decoder = NimbusJwtDecoder
-                .withPublicKey(publicKey)
-                .signatureAlgorithm(SignatureAlgorithm.RS256)
+                .withSecretKey(secretKey)
+                .macAlgorithm(MacAlgorithm.HS256)
                 .build();
 
         decoder.setJwtValidator(
@@ -94,35 +91,5 @@ public class JwtService {
         );
 
         return decoder;
-    }
-
-    private PrivateKey loadPrivateKey(String path) throws Exception {
-        String pem = readPem(path, "PRIVATE KEY");
-
-        byte[] decoded = Base64.getMimeDecoder().decode(pem);
-
-        return KeyFactory.getInstance("RSA")
-                .generatePrivate(new PKCS8EncodedKeySpec(decoded));
-    }
-
-    private PublicKey loadPublicKey(String path) throws Exception {
-        String pem = readPem(path, "PUBLIC KEY");
-
-        byte[] decoded = Base64.getMimeDecoder().decode(pem);
-
-        return KeyFactory.getInstance("RSA")
-                .generatePublic(new X509EncodedKeySpec(decoded));
-    }
-
-    private String readPem(String path, String type) throws IOException {
-        String content = Files.readString(
-                Path.of(path),
-                StandardCharsets.UTF_8
-        );
-
-        return content
-                .replace("-----BEGIN " + type + "-----", "")
-                .replace("-----END " + type + "-----", "")
-                .replaceAll("\\s", "");
     }
 }
