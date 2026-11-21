@@ -5,6 +5,7 @@ import com.api.tresvetas.common.exception.base.ConflictException;
 import com.api.tresvetas.common.exception.base.NotFoundException;
 import com.api.tresvetas.common.factory.ApiResponseFactory;
 import jakarta.servlet.http.HttpServletRequest;
+import java.nio.file.AccessDeniedException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -102,6 +103,19 @@ public class GlobalExceptionHandler {
                 .headers(ex.getHeaders())
                 .body(response.getBody());
     }
+    
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request
+    ) {
+        return ApiResponseFactory.build(
+                HttpStatus.FORBIDDEN,
+                "No tienes permisos para realizar esta operación.",
+                null,
+                request
+        );
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGeneric(
@@ -132,6 +146,6 @@ public class GlobalExceptionHandler {
                 "Se ha producido un error inesperado.",
                 null,
                 request
-        );
+        );  
     }
 }

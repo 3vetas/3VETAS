@@ -1,12 +1,15 @@
-
 package com.api.tresvetas.security.config;
 
+import com.api.tresvetas.common.factory.ApiResponseFactory;
+import com.api.tresvetas.security.handler.JwtAuthenticationEntryPoint;
 import com.api.tresvetas.security.service.JwtCookieService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,7 +34,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             CorsConfigurationSource corsConfigurationSource,
-            JwtCookieService jwtCookieService
+            JwtCookieService jwtCookieService,
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            ObjectMapper objectMapper
     ) throws Exception {
 
         return http
@@ -61,8 +66,29 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                        .accessDeniedHandler((request, response, exception) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+
+                            var apiResponse = ApiResponseFactory.build(
+                                    HttpStatus.FORBIDDEN,
+                                    "No tienes permisos para realizar esta operación.",
+                                    null,
+                                    request
+                            );
+
+                            objectMapper.writeValue(
+                                    response.getOutputStream(),
+                                    apiResponse.getBody()
+                            );
+                        })
+                )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .bearerTokenResolver(jwtCookieService::extractToken)
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .jwt(jwt -> {})
                 )
                 .build();
@@ -111,5 +137,4 @@ public class SecurityConfig {
 
         return source;
     }
-
 }
