@@ -5,7 +5,7 @@ import com.api.tresvetas.common.exception.base.ConflictException;
 import com.api.tresvetas.common.exception.base.NotFoundException;
 import com.api.tresvetas.common.factory.ApiResponseFactory;
 import jakarta.servlet.http.HttpServletRequest;
-import java.nio.file.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -147,5 +148,20 @@ public class GlobalExceptionHandler {
                 null,
                 request
         );  
+    }
+    
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ApiResponse<Void>> handleResponseStatus(
+            ResponseStatusException ex,
+            HttpServletRequest request
+    ) {
+        return ApiResponseFactory.build(
+                ex.getStatusCode(),
+                ex.getReason() != null
+                        ? ex.getReason()
+                        : "No se ha podido procesar la solicitud HTTP.",
+                null,
+                request
+        );
     }
 }

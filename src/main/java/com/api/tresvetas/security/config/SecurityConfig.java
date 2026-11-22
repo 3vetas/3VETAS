@@ -3,6 +3,7 @@ package com.api.tresvetas.security.config;
 import com.api.tresvetas.common.factory.ApiResponseFactory;
 import com.api.tresvetas.security.handler.JwtAuthenticationEntryPoint;
 import com.api.tresvetas.security.service.JwtCookieService;
+import com.api.tresvetas.security.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -36,7 +40,8 @@ public class SecurityConfig {
             CorsConfigurationSource corsConfigurationSource,
             JwtCookieService jwtCookieService,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            DaoAuthenticationProvider daoAuthenticationProvider
     ) throws Exception {
 
         return http
@@ -57,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/auth/login",
+                                "/auth/login/verify",
                                 "/auth/register",
                                 "/auth/logout"
                         ).permitAll()
@@ -86,12 +92,33 @@ public class SecurityConfig {
                             );
                         })
                 )
+                .authenticationProvider(daoAuthenticationProvider)
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .bearerTokenResolver(jwtCookieService::extractToken)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .jwt(jwt -> {})
                 )
                 .build();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(
+            UserDetailsServiceImpl userDetailsService,
+            PasswordEncoder passwordEncoder
+    ) {
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(userDetailsService);
+
+        provider.setPasswordEncoder(passwordEncoder);
+
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration
+    ) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
