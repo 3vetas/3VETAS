@@ -19,7 +19,7 @@
  * - oculto: texto que solo leen los lectores de pantalla.
  */
 /* ==========================================================
-   FUENTES Y COLORES 
+   FUENTES Y COLORES
    ========================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap');
@@ -27,7 +27,7 @@
 
 
 :root {
- 
+
   --fuente-principal: 'Work Sans', sans-serif;
   --fuente-tecnica: 'JetBrains Mono', monospace;
 
@@ -36,7 +36,7 @@
   --color-gris: #6E6E67;
   --color-oliva: #8A964B;
   --color-blanco: #FFFFFF;
-  --color-mostaza: #B57919;
+  --color-mostaza: #b57919;
   --color-teja: #7A2E18;
 
 /* colores generales */
@@ -44,6 +44,33 @@
   --color-texto: #29251F;
   --color-texto-contraste:#FFFFFF;
   --color-fondo: #FFFFFF;
+
+  /* transparencias reutilizables */
+
+--oliva-10: rgb(138 150 75 / 10%);
+--oliva-20: rgb(138 150 75 / 20%);
+--oliva-50: rgb(138 150 75 / 50%);
+
+--mostaza-10: rgb(181 121 25/ 10%);
+--mostaza-20:  rgb(181 121 25/ 20%);
+--mostaza-50: rgb(181 121 25 / 50%);
+
+--gris-10: rgb(110 110 103 / 10%);
+--blanco-50: rgb(255 255 255 / 50%);
+--gris-50: rgb(110 110 103 / 50%);
+
+/* espaciados */
+
+--espacio-xs: 0.5rem;
+--espacio-sm: 1rem;
+--espacio-md: 1.5rem;
+--espacio-lg: 2rem;
+--espacio-xl: 4rem;
+
+/* radios */
+--radio-sm: 0.35rem;
+--radio-md: 0.5rem;
+--radio-lg: 1rem;
 }
 
 *,
@@ -75,7 +102,48 @@ body {
 }
 
 /* ==========================================================
-   BOTONES
+    CONTENEDOR
+   ========================================================== */
+
+.contenedor {
+
+  width: min(1280px, calc(100% - 2rem));
+
+  margin-inline: auto;
+}
+
+/* ==========================================================
+    REJILLAS
+   ========================================================== */
+
+.rejilla {
+  display: grid;
+  gap: var(--espacio-md);
+}
+
+.rejilla--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.rejilla--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.rejilla--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.rejilla--auto {
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(250px, 1fr)
+    );
+}
+
+/* ==========================================================
+    BOTONES
    ========================================================== */
 
 .boton {
@@ -109,32 +177,56 @@ body {
   box-shadow: none;
 }
 
+.boton--bloque {
+  display: flex;
+  width: 100%;
+}
+
 .boton--primario {
-  background-color: var(--color-oliva);
-  border: 2px solid var(--color-oliva);
+  background-color: var(--color-mostaza);
+  border: 2px solid var(--color-mostaza);
   color: var(--color-blanco);
 }
 
 .boton--primario:hover {
-  background-color: var(--color-mostaza);
+  background-color: var(--color-oliva);
   border-color: var(--color-mostaza);
   color: var(--color-blanco);
 }
 
 .boton--secundario {
-  background-color: transparent;
-  border: 2px solid currentColor;
-  color: inherit;
-
+  background-color: var(--oliva-10);
+  border-color: var(--oliva-20);
+  color: var(--color-texto);
 }
 
 .boton--secundario:hover {
   border-color: var(--color-oliva);
-  background-color: rgb(138 150 75 / 12%);
+  background-color: var(--color-blanco);
+}
+
+.boton--contorno {
+  background: transparent;
+  border-color: var(--color-oliva);
+  color: var(--color-oliva);
+}
+
+.boton--contorno:hover {
+  background: var(--oliva-50);
+}
+
+.boton--invertido {
+  background: var(--color-blanco);
+  color: var(--color-texto);
+}
+
+.boton--invertido:hover {
+  background: var(--blanco-50);
+  border-color: var(--color-blanco);
 }
 
 /* ==========================================================
-   ACCIONES
+    ACCIONES
    ========================================================== */
 
 .acciones {
@@ -142,12 +234,23 @@ body {
   gap: 1.5rem;
 }
 
+.acciones--derecha {
+  justify-content: flex-end;
+}
+
+.acciones--centro {
+  justify-content: center;
+}
+
 /* ==========================================================
-   SECCIONES
+    SECCIONES
    ========================================================== */
 
 .seccion {
-  padding: 0rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-xs);
+  padding: var(--espacio-lg) var(--espacio-xl);
 }
 
 .seccion__titulo {
@@ -155,11 +258,17 @@ body {
   margin-bottom: 2rem;
 }
 
+.seccion__vacio {
+
+  padding: var(--espacio-lg);
+  text-align: center;
+  color: var(--gris-50);
+}
 /* ==========================================================
-   TARJETAS
+    TARJETAS
    ========================================================== */
 .tarjeta {
-  background: white;
+  background: var(--color-blanco);
   border: 2px solid  rgb(138 150 75 / 20%);
   padding: 1.5rem;
   border-radius: 0.5rem;
@@ -186,4 +295,152 @@ body {
   background: var(--color-mostaza);
   color: var(--color-blanco);
   border-color: var(--color-mostaza);
+}
+
+.tarjeta__acciones {
+  margin-top: auto;
+}
+
+.tarjeta__imagen {
+  overflow: hidden;
+}
+
+/* ==========================================================
+    PANELES
+   ========================================================== */
+
+.panel {
+
+  background: var(--color-blanco);
+  border: 2px solid var(--oliva-20);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-lg);
+}
+
+.panel__titulo {
+
+  font-family: var(--fuente-tecnica);
+  margin-top: 0;
+  margin-bottom: var(--espacio-md);
+}
+
+.panel__cabecera {}
+.panel__contenido {}
+.panel__pie {}
+
+
+/* ==========================================================
+    FORMULARIOS
+   ========================================================== */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-md);
+}
+
+.formulario__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.campo__etiqueta {
+  font-weight: 600;
+}
+
+.campo__control {
+
+  width: 100%;
+  padding: .9rem;
+  border: 1px solid var(--gris-20);
+  border-radius: var(--radio-sm);
+}
+
+.campo--casilla {
+  flex-direction: row;
+  align-items: center;
+}
+
+.campo__error {
+  color: var(--color-teja);
+}
+
+/* ==========================================================
+    ESTADOS
+   ========================================================== */
+
+  .estado {
+
+  display: inline-flex;
+  padding: .3rem .8rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+.estado--pendiente {
+  background: #fff4d8;
+  color: #8a6500;
+}
+
+.estado--aceptado {
+  background: #dff5df;
+  color: #2d692d;
+}
+
+.estado--en_produccion {
+  background: #dce9ff;
+  color: #2053a3;
+}
+
+.estado--finalizado {
+
+  background: var(--oliva-20);
+  color: var(--color-oliva);
+}
+
+.estado--entregado {
+
+  background: #e4f8e0;
+  color: #206020;
+}
+
+.estado--cancelado {
+
+  background: #f3d7d1;
+  color: var(--color-teja);
+}
+
+.estado--rechazado {
+
+  background: #ffd9d3;
+  color: #7a2e18;
+}
+
+/* ==========================================================
+    RESPONSIVE GLOBAL
+   ========================================================== */
+@media (max-width: 768px) {
+
+  .rejilla--2,
+  .rejilla--3,
+  .rejilla--4 {
+
+    grid-template-columns: 1fr;
+  }
+
+  .acciones {
+    flex-direction: column;
+  }
+
+  .boton {
+    width: 100%;
+  }
 }
