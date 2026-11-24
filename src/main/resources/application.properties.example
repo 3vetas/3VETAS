@@ -86,6 +86,9 @@ app.mail.gmail.refresh-token=${GMAIL_REFRESH_TOKEN}
 app.mail.gmail.token-uri=https://oauth2.googleapis.com/token
 app.mail.gmail.api-base-url=https://gmail.googleapis.com/gmail/v1
 
+app.mail.gmail.connect-timeout=5000
+app.mail.gmail.read-timeout=10000
+
 # ============================================================
 # DOCUMENTACION OPENAPI / SWAGGER
 # ============================================================
