@@ -2,11 +2,44 @@
     PORTADA
    ========================================================== */
 .portada {
-  margin: 0;
-  background: var(--oliva-20);
+  position: relative;
+  overflow: hidden;
+
+  width: 100vw;
+
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
   padding: 5rem 4rem;
-  margin-inline: -1.5rem;
-  margin-top: -1.5rem;
+
+  background:
+    radial-gradient(
+      circle at 80% 50%,
+      rgba(0,0,0,.03) 0%,
+      rgba(0,0,0,.015) 40%,
+      transparent 70%
+    ),
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #fafafa 100%
+    );
+}
+
+.portada__imagen {
+  position: absolute;
+
+  inset:0;
+
+  height: 100%;
+
+  background-image: url('/images/portada/hero-3vetas.webp');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: min(65vw, 1100px);
+
+  pointer-events: none;
+  opacity: .95;
 }
 
 .portada__titulo span{
@@ -16,7 +49,10 @@
 .portada__titulo,
 .portada__texto,
 .portada__acciones {
+  position: relative;
+  z-index: 1;
   max-width: 40rem;
+
 }
 
 /* ==========================================================
@@ -103,6 +139,8 @@
 
 .materiales__tipo .tarjeta__titulo {
   color: var(--color-texto);
+  font-size: larger;
+  text-align: center;
   font-family: var(--fuente-principal);
 }
 
