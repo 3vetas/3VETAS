@@ -7,14 +7,14 @@
     tableros hacen falta y cuánto cuesta. Después nos envías la solicitud y el taller se encarga del
     resto.
   </p>
-  <div class="acciones acciones--centro">
+  <div class="acciones portada__acciones">
     <a class="boton boton--primario" routerLink="/planificador">Ir al planificador</a>
     <a class="boton boton--secundario" routerLink="/productos">Ver catálogo</a>
   </div>
 </section>
 
 <section class="seccion pasos">
-  <h2 class="seccion__titulo">Cómo funciona</h2>
+  <h2 class="seccion__titulo">Cómo funciona el corte a medida en 3vetas</h2>
   <ol class="pasos__lista">
     <li class="tarjeta pasos__paso">
       <span class="pasos__numero">01</span>
@@ -43,25 +43,104 @@
     <li class="tarjeta tarjeta--mostaza pasos__paso">
       <h3 class="tarjeta__titulo">¿Listo para empezar?</h3>
       <p class="tarjeta__texto">Calcula el mejor aprovechamiento de tu tablero.</p>
-      <a class="boton boton--secundario" routerLink="/planificador">PLANIFICAR</a>
+      <a class="boton boton--invertido botton--bloque" routerLink="/planificador">PLANIFICAR</a>
     </li>
   </ol>
 </section>
 
-<section class="seccion taller">
-  <h2 class="seccion__titulo">Taller y Almacén central</h2>
-  <div class="taller__datos">
-    <article class="tarjeta taller__dato">
-      <h3 class="tarjeta__titulo">Ubicación</h3>
-      <p class="tarjeta__texto">Dirección del taller, por definir</p>
+<section class="seccion materiales">
+
+  <h2 class="seccion__titulo">
+    Materiales para cada proyecto
+  </h2>
+
+  <p class="materiales__introduccion">
+    Disponemos de distintos tipos de tablero para adaptarnos a cada necesidad,
+    desde mobiliario doméstico hasta proyectos profesionales de carpintería,
+    interiorismo y construcción.
+  </p>
+
+  <div class="rejilla rejilla--4">
+
+    <article class="tarjeta materiales__tipo">
+
+      <div class="tarjeta__imagen">
+        <img
+          src="/images/materiales/contrachapado.jpg"
+          alt="Tablero contrachapado de madera">
+      </div>
+
+      <h3 class="tarjeta__titulo">
+        Contrachapado
+      </h3>
+
+      <p class="tarjeta__texto">
+        Formado por chapas de madera encoladas en capas cruzadas.
+        Destaca por su resistencia, estabilidad y versatilidad.
+      </p>
+
     </article>
-    <article class="tarjeta taller__dato">
-      <h3 class="tarjeta__titulo">Horario</h3>
-      <p class="tarjeta__texto">Lunes a viernes, horario por definir</p>
+
+    <article class="tarjeta materiales__tipo">
+
+      <div class="tarjeta__imagen">
+        <img
+          src="/images/materiales/madera-maciza.jpg"
+          alt="Tablero de madera maciza">
+      </div>
+
+      <h3 class="tarjeta__titulo">
+        Madera maciza
+      </h3>
+
+      <p class="tarjeta__texto">
+        Fabricada íntegramente con madera natural.
+        Aporta una estética cálida y una gran durabilidad.
+      </p>
+
     </article>
-    <article class="tarjeta taller__dato">
-      <h3 class="tarjeta__titulo">Contacto</h3>
-      <address class="tarjeta__texto">Teléfono y correo electrónico, por definir</address>
+
+    <article class="tarjeta materiales__tipo">
+
+      <div class="tarjeta__imagen">
+        <img
+          src="/images/materiales/melamina.jpg"
+          alt="Tablero melamínico">
+      </div>
+
+      <h3 class="tarjeta__titulo">
+        Melamina
+      </h3>
+
+      <p class="tarjeta__texto">
+        Disponible en múltiples colores y acabados decorativos.
+        Muy utilizada en muebles y armarios.
+      </p>
+
     </article>
+
+    <article class="tarjeta tarjeta--contraste materiales__catalogo">
+
+      <h3 class="tarjeta__titulo">
+        Más materiales disponibles
+      </h3>
+
+      <p class="tarjeta__texto">
+        Explora el catálogo completo para consultar todos los acabados,
+        grosores, formatos y referencias disponibles.
+      </p>
+
+      <div class="tarjeta__acciones">
+        <a
+          class="boton boton--invertido boton--bloque"
+          routerLink="/productos">
+          Ver catálogo completo
+        </a>
+      </div>
+
+    </article>
+
   </div>
+
+
 </section>

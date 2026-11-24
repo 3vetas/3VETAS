@@ -1,9 +1,9 @@
 /* ==========================================================
-   PORTADA
+    PORTADA
    ========================================================== */
 .portada {
   margin: 0;
-  background: rgb(138 150 75 / 25%);
+  background: var(--oliva-20);
   padding: 5rem 4rem;
   margin-inline: -1.5rem;
   margin-top: -1.5rem;
@@ -15,16 +15,28 @@
 
 .portada__titulo,
 .portada__texto,
-.acciones {
+.portada__acciones {
   max-width: 40rem;
 }
 
 /* ==========================================================
-   PASOS
+    PASOS
    ========================================================== */
 
 .pasos {
-  padding: 2rem 4rem;
+  padding: var(--espacio-lg) var(--espacio-xl);
+}
+
+.pasos__paso {
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.pasos__paso .tarjeta__acciones {
+  margin-top: auto;
 }
 
 .pasos__lista {
@@ -43,8 +55,8 @@
   width: 3.5rem;
   height: 3.5rem;
 
-  background-color: white;
-  border: 2px solid rgb(181 121 25 / 50%);
+  background-color:var(--color-blanco);
+  border: 2px solid var(--mostaza-50);
   border-radius: 0.35rem;
 
   font-family: var(--fuente-tecnica);
@@ -55,12 +67,51 @@
 }
 
 .pasos__paso:nth-child(even) {
-  background-color: rgba(0, 0, 0, 6%);
+  background-color: var(--gris-10);
 }
 
-.taller__datos {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+/* ==========================================================
+    MATERIALES
+   ========================================================== */
+
+.materiales{}
+
+.materiales__introduccion {
+  max-width: 60rem;
+  margin-bottom: var(--espacio-lg);
+}
+
+.materiales__tipo {
+  height: 100%;
+}
+
+.materiales__tipo .tarjeta__imagen {
+
+  aspect-ratio: 3 / 4;
+  margin-bottom: var(--espacio-sm);
+  border-radius: var(--radio-sm);
+  overflow: hidden;
+}
+
+.materiales__tipo .tarjeta__imagen img {
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+}
+
+.materiales__tipo .tarjeta__titulo {
+  color: var(--color-texto);
+  font-family: var(--fuente-principal);
+}
+
+.materiales__catalogo,
+.materiales__tipo {
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
 }
 
