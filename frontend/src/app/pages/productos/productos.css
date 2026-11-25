@@ -1,11 +1,11 @@
 
 /* ==========================================================
-   PRODUCTOS - CATÁLOGO
+    PRODUCTOS - CATÁLOGO
    ========================================================== */
 
 
 /* ==========================================================
-   LAYOUT GENERAL
+    LAYOUT GENERAL
    ========================================================== */
 
 .productos__contenido {
@@ -23,25 +23,14 @@
 
 
 /* ==========================================================
-   FILTROS
+    FILTROS
    ========================================================== */
 
 .filtros {
-  padding: 1.5rem;
-  
+  padding: 1rem;
   border: 1px solid rgb(138 150 75 / 20%);
-  border-radius: 0.5rem;
+  border-radius: 0;
 }
-
-.filtros .seccion__titulo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-
-  color: var(--color-oliva);
-}
-
 
 .filtros__formulario {
   display: flex;
@@ -57,27 +46,20 @@
 
 .filtros .campo__etiqueta {
   font-family: var(--fuente-tecnica);
-
   font-size: 0.85rem;
   font-weight: 600;
-
   letter-spacing: 0.12em;
   text-transform: uppercase;
-
   color: var(--color-texto);
 }
 
 .filtros .campo__control {
   padding: 0.9rem 1rem;
-
   font-family: var(--fuente-principal);
   font-size: 1rem;
-
   border: 1px solid rgb(138 150 75 / 35%);
   border-radius: 0.4rem;
-
   cursor: pointer;
-
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -85,44 +67,30 @@
 
 .filtros .campo__control:focus {
   outline: none;
-
   border-color: var(--color-oliva);
-
   box-shadow: 0 0 0 3px rgb(138 150 75 / 15%);
 }
 
 
 .filtros .boton--secundario {
   align-self: flex-end;
-
   margin-top: 0.5rem;
 }
 
 /* ==========================================================
-   CATÁLOGO
+    CATÁLOGO
    ========================================================== */
 
 .catalogo{
   margin-top: 0;
-}   
-.catalogo .seccion__titulo{
-  font-size: 2rem;
-  font-weight: 700;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-
-  color: var(--color-oliva);
 }
 
 .catalogo__lista {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-
   gap: 1.5rem;
-
   margin: 0;
   padding: 0;
-
   list-style: none;
 }
 /*
@@ -130,7 +98,7 @@
 }*/
 
 /* ==========================================================
-   RESPONSIVE
+    RESPONSIVE
    ========================================================== */
 
 @media (max-width: 992px) {
@@ -167,73 +135,56 @@
 }
 
 /* ==========================================================
-   TARJETA TABLERO
+    TARJETA TABLERO
    ========================================================== */
 
 .tarjeta-tablero {
   display: flex;
   flex-direction: column;
-
   height: 100%;
-
   overflow: hidden;
-
   background: var(--color-blanco);
-
   border: 1px solid rgb(138 150 75 / 15%);
   border-radius: 0.5rem;
-
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 
 .tarjeta-tablero:hover {
-  transform: translateY(-2px);
-
   box-shadow:
     0 6px 12px rgb(0 0 0 / 8%);
 }
 
 .tarjeta-tablero__imagen {
-  height: 220px;
-
+  height: 180px;
   border-bottom: 1px solid rgb(138 150 75 / 15%);
 }
 
 .tarjeta-tablero__nombre {
-  margin: 1.5rem 1.5rem 0.5rem;
-
-  font-size: 1.4rem;
+  margin: 1rem 1rem 0.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
-
   color: var(--color-texto);
 }
 
 .tarjeta-tablero__medidas {
   margin: 0 1.5rem;
-
   color: var(--color-gris);
-
   font-family: var(--fuente-tecnica);
-
   font-size: 0.9rem;
 }
 
 .tarjeta-tablero__precio {
   margin: auto 1.5rem 0.75rem;
-
   color: var(--color-teja);
-
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
 }
 
 .tarjeta-tablero__estado {
   margin: 0 1.5rem 1.25rem;
-
   color: var(--color-oliva);
-
   font-weight: 600;
 }
 
@@ -241,13 +192,34 @@
   color: var(--color-teja);
 }
 
-.tarjeta-tablero .boton {
-  margin: 0 1.5rem 1.5rem;
+.tarjeta-tablero .boton--primario {
+  flex: 1;
+}
+
+.boton-icono {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--oliva-20);
+  border-radius: .35rem;
+  color: var(--color-gris);
+  background: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.tarjeta-tablero__acciones {
+  display: flex;
+  gap: .5rem;
+
+  margin: 0 1rem 1rem;
 }
 
 
 /* ==========================================================
-   PAGINACIÓN
+    PAGINACIÓN
    ========================================================== */
 
 .paginacion {
@@ -255,12 +227,9 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-
   gap: 0.75rem;
-
   margin-top: 3rem;
   padding-top: 2rem;
-
   border-top: 1px solid rgb(138 150 75 / 15%);
 }
 
@@ -276,9 +245,7 @@
 .paginacion__numero--actual {
   background-color: var(--color-oliva);
   border-color: var(--color-oliva);
-
   color: var(--color-blanco);
-
   font-weight: 700;
 }
 

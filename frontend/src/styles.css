@@ -81,7 +81,6 @@
 
 html {
   font-size: 16px;
-  line-height: 1.5;
 }
 
 body {
@@ -251,15 +250,24 @@ body {
   flex-direction: column;
   gap: var(--espacio-xs);
   padding: var(--espacio-lg) var(--espacio-xl);
+  width: min(90%, 1500px);
+  margin-inline:auto;
 }
 
 .seccion__titulo {
-  font-size: 2rem;
+  font-size: 2.75rem;
+  line-height: 1.1;
   margin-bottom: 2rem;
 }
 
-.seccion__vacio {
+.seccion__subtitulo {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
 
+.seccion__vacio {
   padding: var(--espacio-lg);
   text-align: center;
   color: var(--gris-50);

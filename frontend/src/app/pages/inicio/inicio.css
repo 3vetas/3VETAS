@@ -26,6 +26,12 @@
     );
 }
 
+.portada__titulo{
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
 .portada__imagen {
   position: absolute;
 
@@ -80,7 +86,7 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2.5rem;
+  gap: 1.5rem;
 }
 
 .pasos__numero {
@@ -118,12 +124,12 @@
 }
 
 .materiales__tipo {
-  height: 100%;
+  height: 50%;
 }
 
 .materiales__tipo .tarjeta__imagen {
 
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 3;
   margin-bottom: var(--espacio-sm);
   border-radius: var(--radio-sm);
   overflow: hidden;
@@ -139,7 +145,7 @@
 
 .materiales__tipo .tarjeta__titulo {
   color: var(--color-texto);
-  font-size: larger;
+  font-size: 1.5rem;
   text-align: center;
   font-family: var(--fuente-principal);
 }

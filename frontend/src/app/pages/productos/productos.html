@@ -1,7 +1,7 @@
-<h1>Catálogo de tableros</h1>
+<h1 class="seccion__titulo">Catálogo de tableros</h1>
 <div class="productos__contenido">
   <section class="seccion filtros">
-    <h2 class="seccion__titulo">Filtros</h2>
+    <h2 class="seccion__subtitulo">Filtros</h2>
     <form class="filtros__formulario" (submit)="$event.preventDefault()">
       <div class="campo">
         <label class="campo__etiqueta" for="filtro-tipo">Madera </label>
@@ -51,7 +51,7 @@
   </section>
 
   <section class="seccion catalogo">
-    <h2 class="seccion__titulo">Tableros ({{ filtrados().length }})</h2>
+    <h2 class="seccion__subtitulo">Tableros ({{ filtrados().length }})</h2>
     <ul class="catalogo__lista">
       @for (tablero of visibles(); track tablero.id) {
         <li class="catalogo__item">
@@ -72,9 +72,19 @@
             } @else {
               <p class="tarjeta-tablero__estado tarjeta-tablero__estado--sin-stock">Sin stock</p>
             }
-            <a class="boton boton--primario boton--bloque" routerLink="/planificador">
-              Usar en planificador
-            </a>
+
+            <div class="tarjeta-tablero__acciones">
+              <a
+                class="boton boton--primario boton--bloque"
+                routerLink="/planificador">
+                Usar en planificador
+              </a>
+              <a
+                class="boton-icono"
+                [routerLink]="['/productos', tablero.id]">
+                👁
+              </a>
+            </div>
           </article>
         </li>
       } @empty {
