@@ -23,6 +23,7 @@ public interface TableroMapper {
     @Mapping(target = "formato", ignore = true)
     @Mapping(target = "grosor", ignore = true)
     @Mapping(target = "stockActual", ignore = true)
+    @Mapping(target = "activo", defaultValue = "true")
     Tablero toEntity(TableroRequestDTO dto);
 
     @Mapping(target = "tipoTableroId", source = "tipoTablero.id")
