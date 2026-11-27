@@ -4,7 +4,7 @@ import com.api.tresvetas.common.factory.ApiResponseFactory;
 import com.api.tresvetas.security.handler.JwtAuthenticationEntryPoint;
 import com.api.tresvetas.security.service.JwtCookieService;
 import com.api.tresvetas.security.service.UserDetailsServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
