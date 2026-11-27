@@ -12,6 +12,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
     Optional<Persona> findByUsuarioId(Integer usuarioId);
-
-    boolean existsByUsuarioId(Integer usuarioId);
 }
