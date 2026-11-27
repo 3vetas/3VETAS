@@ -1,7 +1,6 @@
 package com.api.tresvetas.proyectos.dto.patch;
 
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +18,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProyectoPatchDTO {
 
-    @Positive
     private Integer usuarioId;
 
     @Pattern(regexp = ".*\\S.*", message = "El nombre no puede estar vacío ni contener únicamente espacios")

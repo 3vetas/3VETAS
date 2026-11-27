@@ -1,6 +1,5 @@
 package com.api.tresvetas.proyectos.dto.update;
 
-import com.api.tresvetas.proyectos.dto.update.TableroProyectoUpdateDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
