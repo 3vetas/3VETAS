@@ -1,4 +1,3 @@
-
 package com.api.tresvetas.proyectos.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;

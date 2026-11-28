@@ -1,23 +1,25 @@
 package com.api.tresvetas.common.exception.handler;
 
-import com.api.tresvetas.common.dto.ApiMetadata;
 import com.api.tresvetas.common.dto.ApiResponse;
 import com.api.tresvetas.common.exception.base.ConflictException;
 import com.api.tresvetas.common.exception.base.NotFoundException;
+import com.api.tresvetas.common.factory.ApiResponseFactory;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.Instant;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
- *
  *
  * @author Jabier Zurro Aduriz
  */
@@ -30,7 +32,7 @@ public class GlobalExceptionHandler {
             NotFoundException ex,
             HttpServletRequest request
     ) {
-        return buildResponse(
+        return ApiResponseFactory.build(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 null,
@@ -43,7 +45,7 @@ public class GlobalExceptionHandler {
             ConflictException ex,
             HttpServletRequest request
     ) {
-        return buildResponse(
+        return ApiResponseFactory.build(
                 HttpStatus.CONFLICT,
                 ex.getMessage(),
                 null,
@@ -65,7 +67,7 @@ public class GlobalExceptionHandler {
                 )
         );
 
-        return buildResponse(
+        return ApiResponseFactory.build(
                 HttpStatus.BAD_REQUEST,
                 "Error de validación de los datos de entrada.",
                 errors,
@@ -78,9 +80,39 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException ex,
             HttpServletRequest request
     ) {
-        return buildResponse(
+        return ApiResponseFactory.build(
                 HttpStatus.BAD_REQUEST,
                 "El cuerpo de la solicitud no es válido. Comprueba el formato JSON y los tipos de datos.",
+                null,
+                request
+        );
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex,
+            HttpServletRequest request
+    ) {
+        ResponseEntity<ApiResponse<Void>> response = ApiResponseFactory.build(
+                HttpStatus.METHOD_NOT_ALLOWED,
+                "El método HTTP utilizado no está permitido para esta ruta.",
+                null,
+                request
+        );
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .headers(ex.getHeaders())
+                .body(response.getBody());
+    }
+    
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request
+    ) {
+        return ApiResponseFactory.build(
+                HttpStatus.FORBIDDEN,
+                "No tienes permisos para realizar esta operación.",
                 null,
                 request
         );
@@ -91,38 +123,45 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+        if (ex instanceof ErrorResponse errorResponse) {
+            ResponseEntity<ApiResponse<Void>> response = ApiResponseFactory.build(
+                    errorResponse.getStatusCode(),
+                    "No se ha podido procesar la solicitud HTTP.",
+                    null,
+                    request
+            );
+
+            return ResponseEntity.status(errorResponse.getStatusCode())
+                    .headers(errorResponse.getHeaders())
+                    .body(response.getBody());
+        }
+
         log.error(
                 "Error inesperado al procesar la solicitud {}",
                 request.getRequestURI(),
                 ex
         );
 
-        return buildResponse(
+        return ApiResponseFactory.build(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Se ha producido un error inesperado.",
                 null,
                 request
-        );
+        );  
     }
-
-    private <T> ResponseEntity<ApiResponse<T>> buildResponse(
-            HttpStatus status,
-            String message,
-            T data,
+    
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ApiResponse<Void>> handleResponseStatus(
+            ResponseStatusException ex,
             HttpServletRequest request
     ) {
-        ApiMetadata metadata = new ApiMetadata(
-                Instant.now(),
-                status.value(),
-                request.getRequestURI()
+        return ApiResponseFactory.build(
+                ex.getStatusCode(),
+                ex.getReason() != null
+                        ? ex.getReason()
+                        : "No se ha podido procesar la solicitud HTTP.",
+                null,
+                request
         );
-
-        ApiResponse<T> response = new ApiResponse<>(
-                metadata,
-                message,
-                data
-        );
-
-        return ResponseEntity.status(status).body(response);
     }
 }

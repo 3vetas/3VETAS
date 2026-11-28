@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  *
  * @author Jabier Zurro Aduriz
  */
-@JsonPropertyOrder({"id", "espesor_mm"})
+@JsonPropertyOrder({"id", "espesorMm"})
 public record GrosorResponseDTO(
         Integer id,
         BigDecimal espesorMm

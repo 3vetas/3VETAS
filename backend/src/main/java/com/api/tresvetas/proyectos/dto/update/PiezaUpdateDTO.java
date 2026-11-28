@@ -1,4 +1,3 @@
-
 package com.api.tresvetas.proyectos.dto.update;
 
 import jakarta.validation.constraints.DecimalMin;
@@ -24,7 +23,6 @@ import lombok.Setter;
 public class PiezaUpdateDTO {
 
     @NotNull
-    @Positive
     private Integer id;
 
     @Size(max = 255)

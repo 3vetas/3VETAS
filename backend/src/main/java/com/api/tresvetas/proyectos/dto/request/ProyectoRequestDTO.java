@@ -1,10 +1,8 @@
-
 package com.api.tresvetas.proyectos.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -24,7 +22,6 @@ import lombok.Setter;
 public class ProyectoRequestDTO {
 
     @NotNull
-    @Positive
     private Integer usuarioId;
 
     @NotBlank

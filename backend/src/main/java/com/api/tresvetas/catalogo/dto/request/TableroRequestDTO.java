@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
@@ -49,9 +48,6 @@ public class TableroRequestDTO {
     @DecimalMin("0.0")
     @Digits(integer = 8, fraction = 2)
     private BigDecimal precioTablero;
-
-    @PositiveOrZero
-    private Integer stockActual;
 
     private Boolean activo;
 }

@@ -9,14 +9,14 @@ import java.math.BigDecimal;
  */
 @JsonPropertyOrder({
     "id",
-    "tipo_tablero_id",
-    "acabado_id",
-    "formato_id",
-    "grosor_id",
+    "tipoTableroId",
+    "acabadoId",
+    "formatoId",
+    "grosorId",
     "referencia",
     "descripcion",
-    "precio_tablero",
-    "stock_actual",
+    "precioTablero",
+    "stockActual",
     "activo"
 })
 public record TableroResponseDTO(
